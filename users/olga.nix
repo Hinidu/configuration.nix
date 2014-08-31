@@ -3,7 +3,7 @@
 {
   users.extraUsers.olga = {
     group = "olga";
-    extraGroups = [ "users" ];
+    extraGroups = [ "transmission" "users" ];
     uid = 1001;
     createHome = true;
     home = "/home/olga";
