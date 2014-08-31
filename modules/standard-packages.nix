@@ -13,6 +13,7 @@
     haskellPackages.xmonad
     haskellPackages.xmonadContrib
     haskellPackages.xmonadExtras
+    libreoffice
     mpv
     nix-repl
     rxvt_unicode
