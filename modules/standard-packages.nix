@@ -6,6 +6,7 @@
   environment.systemPackages = with pkgs; [
     chromiumBeta
     ctags
+    evince
     fish
     git
     haskellPackages.ghc
@@ -21,7 +22,9 @@
     vifm
     vim
     wget
+    xarchiver
     xlibs.xmessage
+    zathura
   ];
 
   fonts.fonts = [ pkgs.terminus_font ];
