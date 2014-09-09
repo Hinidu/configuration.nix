@@ -12,10 +12,10 @@
       ./modules/i18n.nix
       ./modules/networking.nix
       ./modules/standard-packages.nix
+      ./modules/virtualbox-host.nix
       ./modules/xserver.nix
       ./users/hinidu.nix
       ./users/olga.nix
-      <nixos/modules/programs/virtualbox.nix>
     ];
 
   nix.gc.automatic = true;
