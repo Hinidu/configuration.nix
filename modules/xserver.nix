@@ -11,8 +11,6 @@
 
     synaptics = {
       enable = true;
-      maxSpeed = "1.0";
-      minSpeed = "0.3";
       twoFingerScroll = true;
     };
 
