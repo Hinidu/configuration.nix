@@ -17,9 +17,11 @@
     chromiumBeta
     ctags
     evince
+    exercism
     fish
     git
     haskellPackages.ghc
+    haskellPackages.testFrameworkHunit
     haskellPackages.xmobar
     haskellPackages.xmonad
     haskellPackages.xmonadContrib
