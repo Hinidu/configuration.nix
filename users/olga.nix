@@ -11,4 +11,6 @@
   };
 
   users.extraGroups.olga.gid = 1001;
+
+  imports = [ ../modules/xfce.nix ];
 }

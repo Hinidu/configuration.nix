@@ -18,10 +18,7 @@
 
     # displayManager.lightdm.enable = true;
 
-    desktopManager = {
-      xterm.enable = false;
-      xfce.enable = true;
-    };
+    desktopManager.xterm.enable = false;
 
     windowManager.xmonad = {
       enable = true;

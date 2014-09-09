@@ -16,7 +16,6 @@
   environment.systemPackages = with pkgs; [
     chromiumBeta
     ctags
-    evince
     exercism
     fish
     git
@@ -34,7 +33,6 @@
     vifm
     vim
     wget
-    xarchiver
     xlibs.xmessage
     zathura
   ];
