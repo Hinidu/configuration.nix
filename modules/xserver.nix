@@ -16,8 +16,6 @@
 
     displayManager.slim.enable = true;
 
-    # displayManager.lightdm.enable = true;
-
     desktopManager.xterm.enable = false;
 
     windowManager.xmonad = {
@@ -25,4 +23,25 @@
       enableContribAndExtras = true;
     };
   };
+
+  nixpkgs.config = {
+    allowUnfree = true;
+
+    chromium = {
+      enableGoogleTalkPlugin = true;
+      enablePepperFlash = true;
+      enablePepperPdf = true;
+    };
+  };
+
+  environment.systemPackages = with pkgs; [
+    chromiumBeta
+    libreoffice
+    mpv
+    rxvt_unicode
+    transmission
+    zathura
+  ];
+
+  fonts.fonts = [ pkgs.terminus_font ];
 }
