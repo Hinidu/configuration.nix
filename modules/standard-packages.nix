@@ -2,10 +2,13 @@
 
 {
   environment.systemPackages = with pkgs; [
+    cmake
     ctags
     exercism
     fish
+    gcc
     git
+    gnumake
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
       self.ghcMod
@@ -17,11 +20,12 @@
       self.xmonadExtras
     ]))
     nix-repl
+    python
     (texLiveAggregationFun {
       paths = [ texLive texLiveBeamer texLiveExtra texLiveModerncv ];
     })
     vifm
-    vim
+    vimHugeX
     wget
     xlibs.xmessage
   ];
