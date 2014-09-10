@@ -6,13 +6,16 @@
     exercism
     fish
     git
-    haskellPackages.ghc
-    haskellPackages.HaTeX
-    haskellPackages.testFrameworkHunit
-    haskellPackages.xmobar
-    haskellPackages.xmonad
-    haskellPackages.xmonadContrib
-    haskellPackages.xmonadExtras
+    (haskellPackages.ghcWithPackages (self: [
+      self.ghc
+      self.ghcMod
+      self.HaTeX
+      self.testFrameworkHunit
+      self.xmobar
+      self.xmonad
+      self.xmonadContrib
+      self.xmonadExtras
+    ]))
     nix-repl
     (texLiveAggregationFun {
       paths = [ texLive texLiveBeamer texLiveExtra texLiveModerncv ];
