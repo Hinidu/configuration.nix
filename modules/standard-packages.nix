@@ -13,6 +13,9 @@
     haskellPackages.xmonadContrib
     haskellPackages.xmonadExtras
     nix-repl
+    (texLiveAggregationFun {
+      paths = [ texLive texLiveBeamer texLiveExtra texLiveModerncv ];
+    })
     vifm
     vim
     wget
