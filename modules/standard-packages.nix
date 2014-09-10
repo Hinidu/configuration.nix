@@ -7,6 +7,7 @@
     fish
     git
     haskellPackages.ghc
+    haskellPackages.HaTeX
     haskellPackages.testFrameworkHunit
     haskellPackages.xmobar
     haskellPackages.xmonad
