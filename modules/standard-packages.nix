@@ -21,9 +21,7 @@
     ]))
     nix-repl
     python
-    (texLiveAggregationFun {
-      paths = [ texLive texLiveBeamer texLiveExtra texLiveModerncv ];
-    })
+    texLiveFull
     vifm
     vimHugeX
     wget
