@@ -7,6 +7,7 @@
     exercism
     fish
     gcc
+    gimp
     git
     gnumake
     (haskellPackages.ghcWithPackages (self: [
@@ -19,6 +20,7 @@
       self.xmonadContrib
       self.xmonadExtras
     ]))
+    ledger
     nix-repl
     python
     texLiveFull
