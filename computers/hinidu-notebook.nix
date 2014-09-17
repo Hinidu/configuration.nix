@@ -23,5 +23,11 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
+  services.redshift = {
+    enable = true;
+    latitude = "51";
+    longitude = "-2";
+  };
+
   services.transmission.enable = true;
 }
