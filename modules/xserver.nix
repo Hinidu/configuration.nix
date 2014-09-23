@@ -40,6 +40,7 @@
     mpv
     rxvt_unicode
     transmission
+    xclip
     zathura
   ];
 
