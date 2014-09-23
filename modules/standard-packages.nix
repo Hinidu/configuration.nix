@@ -13,7 +13,6 @@
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
       self.ghcMod
-      self.HaTeX
       self.testFrameworkHunit
       self.xmobar
       self.xmonad
