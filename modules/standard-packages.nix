@@ -14,8 +14,10 @@
     git
     gnumake
     (haskellPackages.ghcWithPackages (self: [
+      self.cabal2nix
       self.ghc
       self.ghcMod
+      self.permutation
       self.testFrameworkHunit
       self.xmobar
       self.xmonad
