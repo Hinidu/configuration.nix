@@ -7,6 +7,7 @@
     cmake
     ctags
     exercism
+    file
     fish
     gcc
     gimp
