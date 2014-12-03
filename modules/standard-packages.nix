@@ -25,6 +25,7 @@
     nix-repl
     python
     texLiveFull
+    unzip
     vifm
     vimHugeX
     wget
