@@ -1,5 +1,4 @@
 { config, pkgs, ... }:
-
 {
   environment.systemPackages = with pkgs; [
     aspell
@@ -31,4 +30,9 @@
     wget
     xlibs.xmessage
   ];
+
+  services.postgresql = {
+    enable = true;
+    package = pkgs.postgresql94;
+  };
 }
