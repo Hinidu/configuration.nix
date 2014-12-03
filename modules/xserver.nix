@@ -35,6 +35,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    audacity
     chromiumBeta
     libreoffice
     mpv
