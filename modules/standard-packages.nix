@@ -6,6 +6,7 @@
     aspellDicts.ru
     cmake
     ctags
+    erlang
     exercism
     file
     fish
