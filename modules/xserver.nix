@@ -16,6 +16,8 @@
 
     displayManager.slim.enable = true;
 
+    desktopManager.kde4.enable = true;
+
     desktopManager.xterm.enable = false;
 
     windowManager.xmonad = {
