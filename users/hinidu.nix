@@ -3,7 +3,7 @@
 {
   users.extraUsers.hinidu = {
     group = "hinidu";
-    extraGroups = [ "transmission" "users" "vboxusers" "wheel" ];
+    extraGroups = [ "docker" "transmission" "users" "vboxusers" "wheel" ];
     uid = 1000;
     createHome = true;
     home = "/home/hinidu";

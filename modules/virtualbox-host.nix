@@ -1,5 +1,5 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ <nixos/modules/programs/virtualbox.nix> ];
+  services.virtualboxHost.enable = true;
 }
