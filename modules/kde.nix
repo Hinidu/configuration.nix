@@ -11,7 +11,6 @@
     kdeutils
     applications
     kdegames
-    kdeedu
     kdelibs
     kde_baseapps
     kactivities
