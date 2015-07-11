@@ -42,6 +42,7 @@
     # sbt
     # scala
     # steam
+    teamviewer
     telnet
     testdisk
     # tintin
