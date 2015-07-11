@@ -50,6 +50,7 @@
     # texLiveFull
     unrar
     unzip
+    vagrant
     vifm
     vimHugeX
     wget
