@@ -56,7 +56,7 @@
 
   # services.elasticsearch.enable = true;
 
-  services.neo4j.enable = true;
+  # services.neo4j.enable = true;
 
   services.postgresql = {
     enable = true;
