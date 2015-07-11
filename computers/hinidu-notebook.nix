@@ -13,6 +13,7 @@
     ];
 
   networking.hostName = "hinidu_notebook";
+  networking.firewall.enable = false;
   networking.wireless.enable = true;
 
   services.transmission.enable = true;

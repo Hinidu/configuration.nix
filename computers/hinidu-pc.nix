@@ -17,6 +17,7 @@
   fileSystems."/home".options = "defaults,noatime,discard,inline_xattr";
 
   networking.hostName = "hinidu_pc";
+  networking.firewall.enable = false;
 
   services.transmission.enable = true;
   services.transmission.settings = {
