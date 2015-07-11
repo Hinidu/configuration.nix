@@ -33,7 +33,7 @@
     # kibana
     # logstash
     mercurial
-    # mono
+    mono
     # neovim
     nix-repl
     # openjdk
