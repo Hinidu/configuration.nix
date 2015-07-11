@@ -28,8 +28,6 @@
       # self.testFrameworkHunit
       self.xmobar
       self.xmonad
-      self.xmonadContrib
-      self.xmonadExtras
     ]))
     # idea.android-studio
     # kibana
