@@ -38,6 +38,7 @@
     # neovim
     nix-repl
     # openjdk
+    p7zip
     python
     # sbt
     # scala
@@ -46,12 +47,14 @@
     testdisk
     # tintin
     # texLiveFull
+    unrar
     unzip
     vifm
     vimHugeX
     wget
     xlibs.xmessage
     xorg.luit
+    zip
   ];
 
   # services.elasticsearch.enable = true;
