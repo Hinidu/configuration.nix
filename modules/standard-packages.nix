@@ -7,6 +7,7 @@
     aspellDicts.ru
     cmake
     ctags
+    curl
     dmenu2
     # erlang
     # exercism
