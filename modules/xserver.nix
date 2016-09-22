@@ -52,6 +52,7 @@
     rxvt_unicode
     scrot
     transmission
+    unity3d
     xclip
     zathura
   ];
@@ -59,4 +60,7 @@
   fonts.fonts = [ pkgs.terminus_font ];
 
   services.teamviewer.enable = true;
+
+  # Is needed for Unity3D now.
+  security.chromiumSuidSandbox.enable = true;
 }
