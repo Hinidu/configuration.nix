@@ -27,7 +27,7 @@
     umask = 2;
   };
 
-  services.xserver.xrandrHeads = ["HDMI1" "VGA1"];
+  services.xserver.xrandrHeads = ["VGA1" "HDMI1"];
 
   # Disable custom SCSI link power management policy because it fails on start 
   # and by the way doesn't do anything useful for me.
