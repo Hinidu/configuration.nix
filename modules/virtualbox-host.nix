@@ -2,5 +2,5 @@
 
 {
   nixpkgs.config.virtualbox.enableExtensionPack = true;
-  services.virtualboxHost.enable = true;
+  virtualisation.virtualbox.host.enable = true;
 }
