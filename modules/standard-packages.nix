@@ -8,6 +8,7 @@
     ctags
     curl
     dmenu2
+    elmPackages.elm
     file
     fish
     gcc
