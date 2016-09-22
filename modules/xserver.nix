@@ -46,7 +46,7 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    chromiumBeta
+    chromium
     libreoffice
     mpv
     rxvt_unicode
