@@ -70,10 +70,4 @@
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4ee2", MODE="0600", OWNER="hinidu"
   '';
-
-  nixpkgs.config.packageOverrides = pkgs: {
-    docker = pkgs.docker.override { go = pkgs.go_1_3; };
-  };
-
-  virtualisation.docker.enable = true;
 }
