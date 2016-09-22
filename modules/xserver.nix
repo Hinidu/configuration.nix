@@ -65,4 +65,6 @@
   ];
 
   fonts.fonts = [ pkgs.terminus_font ];
+
+  services.teamviewer.enable = true;
 }
