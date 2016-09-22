@@ -42,15 +42,8 @@
     };
   };
 
-  nixpkgs.config = {
-    allowUnfree = true;
-
-    chromium = {
-      enableGoogleTalkPlugin = true;
-      enablePepperFlash = true;
-      enablePepperPdf = true;
-    };
-  };
+  # Is needed for teamviewer for example.
+  nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
     audacity
