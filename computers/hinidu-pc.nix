@@ -29,10 +29,6 @@
 
   services.xserver.xrandrHeads = ["VGA1" "HDMI1"];
 
-  # Disable custom SCSI link power management policy because it fails on start 
-  # and by the way doesn't do anything useful for me.
-  powerManagement.scsiLinkPolicy = "";
-
   boot.extraModprobeConfig = ''
     options snd_hda_intel enable=0,1
   '';
