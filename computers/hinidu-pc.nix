@@ -12,9 +12,9 @@
       ../users/olga.nix
     ];
 
-  fileSystems."/".options = "defaults,noatime,discard,inline_xattr";
-  fileSystems."/boot".options = "defaults,noatime,discard";
-  fileSystems."/home".options = "defaults,noatime,discard,inline_xattr";
+  fileSystems."/".options = ["defaults" "noatime" "discard" "inline_xattr"];
+  fileSystems."/boot".options = ["defaults" "noatime" "discard"];
+  fileSystems."/home".options = ["defaults" "noatime" "discard" "inline_xattr"];
 
   networking.hostName = "hinidu_pc";
   networking.firewall.enable = false;
