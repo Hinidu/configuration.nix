@@ -18,6 +18,7 @@
       self.ghc
       self.xmobar
       self.xmonad
+      self.xmonad-contrib
     ]))
     nix-repl
     p7zip
