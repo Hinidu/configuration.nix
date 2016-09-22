@@ -1,2 +1,5 @@
+*.swp
+*.backup
+
 /configuration.nix
 /hardware-configuration.nix
