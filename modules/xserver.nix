@@ -46,7 +46,6 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    audacity
     chromiumBeta
     libreoffice
     mpv
