@@ -34,5 +34,7 @@
     options snd_hda_intel enable=0,1
   '';
 
+  boot.supportedFilesystems = ["exfat"];
+
   sound.enableOSSEmulation = false;
 }
