@@ -31,6 +31,7 @@
     vagrant
     vifm
     vimHugeX
+    vscode
     wget
     xlibs.xmessage
     xorg.luit
