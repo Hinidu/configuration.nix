@@ -49,6 +49,7 @@
     chromium
     libreoffice
     mpv
+    pgadmin
     rxvt_unicode
     scrot
     transmission

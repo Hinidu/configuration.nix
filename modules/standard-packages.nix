@@ -8,6 +8,7 @@
     ctags
     curl
     dmenu2
+    elixir
     elmPackages.elm
     file
     fish
@@ -15,12 +16,16 @@
     gimp
     git
     gnumake
+    go
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
+      self.QuickCheck
       self.xmobar
       self.xmonad
       self.xmonad-contrib
     ]))
+    hugo
+    neovim
     nix-repl
     p7zip
     python
