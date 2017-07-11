@@ -28,6 +28,7 @@
     neovim
     nix-repl
     p7zip
+    platinum-searcher
     python
     telnet
     testdisk
