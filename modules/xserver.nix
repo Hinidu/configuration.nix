@@ -53,9 +53,13 @@
     rxvt_unicode
     scrot
     transmission
+    unity3d
     xclip
     zathura
   ];
+
+  # Is needed for Unity3D
+  security.chromiumSuidSandbox.enable = true;
 
   fonts.fonts = [ pkgs.terminus_font ];
 
