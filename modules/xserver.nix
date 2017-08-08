@@ -52,6 +52,8 @@
     pgadmin
     rxvt_unicode
     scrot
+    slack
+    tdesktop
     transmission
     unity3d
     xclip
