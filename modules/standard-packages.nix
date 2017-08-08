@@ -4,12 +4,13 @@
     aspell
     aspellDicts.en
     aspellDicts.ru
+    beam.packages.erlangR20.elixir
     cmake
     ctags
     curl
     dmenu2
-    elixir
     elmPackages.elm
+    erlangR20
     file
     fish
     gcc
