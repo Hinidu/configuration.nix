@@ -38,7 +38,6 @@
     unzip
     vagrant
     vifm
-    vimHugeX
     vscode
     wget
     xlibs.xmessage
