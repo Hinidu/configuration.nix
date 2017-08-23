@@ -20,6 +20,7 @@
 
   networking.hostName = "hinidu_pc";
   networking.firewall.enable = false;
+  networking.wireless.enable = true;
 
   services.transmission.enable = true;
   services.transmission.settings = {
