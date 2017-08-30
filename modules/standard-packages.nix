@@ -4,6 +4,7 @@
     aspell
     aspellDicts.en
     aspellDicts.ru
+    awscli
     beam.packages.erlangR20.elixir
     cmake
     ctags
