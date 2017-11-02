@@ -31,7 +31,7 @@
     nix-repl
     p7zip
     platinum-searcher
-    python
+    python3
     telnet
     terraform_0_9
     testdisk
