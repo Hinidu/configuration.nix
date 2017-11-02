@@ -53,6 +53,7 @@
     rxvt_unicode
     scrot
     slack
+    steam-run
     tdesktop
     transmission
     unity3d
