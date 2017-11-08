@@ -33,7 +33,7 @@
     platinum-searcher
     python3
     telnet
-    terraform_0_9
+    terraform_0_10
     testdisk
     unrar
     unzip
