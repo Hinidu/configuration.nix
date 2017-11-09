@@ -30,8 +30,8 @@
     neovim
     nix-repl
     p7zip
-    platinum-searcher
     python3
+    ripgrep
     telnet
     terraform_0_10
     testdisk
