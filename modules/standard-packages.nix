@@ -10,6 +10,7 @@
     ctags
     curl
     dmenu2
+    dnsutils
     elmPackages.elm
     erlangR20
     file
