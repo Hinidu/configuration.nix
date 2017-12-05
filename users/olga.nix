@@ -12,8 +12,5 @@
 
   users.extraGroups.olga.gid = 1001;
 
-  imports = [
-    ../modules/kde.nix
-    # ../modules/xfce.nix
-  ];
+  imports = [ ../modules/kde.nix ];
 }
