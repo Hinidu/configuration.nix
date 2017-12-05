@@ -22,25 +22,19 @@
     go
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
-      self.QuickCheck
       self.xmobar
       self.xmonad
       self.xmonad-contrib
     ]))
     hugo
     neovim
-    nix-repl
-    p7zip
     python3
     ripgrep
-    telnet
     terraform_0_10
     testdisk
     unrar
     unzip
-    vagrant
     vifm
-    vscode
     wget
     xlibs.xmessage
     xorg.luit
