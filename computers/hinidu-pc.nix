@@ -23,7 +23,7 @@
 
   services.transmission.enable = true;
   services.transmission.settings = {
-    download-dir = "/media/tmp/downloads/";
+    download-dir = "/media/tmp/movies/";
     incomplete-dir-enabled = false;
     rpc-whitelist = "127.0.0.1,192.168.1.*";
     umask = 2;
