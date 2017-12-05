@@ -3,7 +3,6 @@
 {
   imports =
     [ ../modules/boot.nix
-      ../modules/db.nix
       ../modules/i18n.nix
       ../modules/misc.nix
       ../modules/samba.nix
