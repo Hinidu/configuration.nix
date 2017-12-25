@@ -53,6 +53,7 @@
     rxvt_unicode
     scrot
     slack
+    steam
     steam-run
     tdesktop
     transmission
