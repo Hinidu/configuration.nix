@@ -13,6 +13,7 @@
     dnsutils
     elmPackages.elm
     erlangR20
+    f2fs-tools
     file
     fish
     gcc
