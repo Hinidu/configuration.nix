@@ -1,38 +1,27 @@
 { config, pkgs, ... }:
+
 {
   environment.systemPackages = with pkgs; [
-    aspell
-    aspellDicts.en
-    aspellDicts.ru
     awscli
     beam.packages.erlangR20.elixir
-    cmake
-    ctags
     curl
     dmenu2
     dnsutils
-    elmPackages.elm
     erlangR20
     f2fs-tools
     file
     fish
-    gcc
-    gimp
     git
-    gnumake
-    go
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
       self.xmobar
       self.xmonad
       self.xmonad-contrib
     ]))
-    hugo
     neovim
     python3
     ripgrep
     terraform_0_10
-    testdisk
     unrar
     unzip
     vifm

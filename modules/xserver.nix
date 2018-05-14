@@ -49,13 +49,11 @@
     chromium
     libreoffice
     mpv
-    pgadmin
     rxvt_unicode
     scrot
     slack
     steam
     steam-run
-    tdesktop
     transmission
     unity3d
     xclip
@@ -67,5 +65,5 @@
 
   fonts.fonts = [ pkgs.terminus_font ];
 
-  # services.teamviewer.enable = true;
+  services.teamviewer.enable = true;
 }
