@@ -63,7 +63,7 @@
   # Is needed for Unity3D
   security.chromiumSuidSandbox.enable = true;
 
-  fonts.fonts = [ pkgs.terminus_font ];
+  fonts.fonts = [ pkgs.source-code-pro ];
 
   services.teamviewer.enable = true;
 }
