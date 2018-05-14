@@ -5,7 +5,6 @@
     [ ../modules/boot.nix
       ../modules/i18n.nix
       ../modules/misc.nix
-      ../modules/samba.nix
       ../modules/standard-packages.nix
       ../modules/virtualbox-host.nix
       ../modules/xserver.nix
