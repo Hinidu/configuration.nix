@@ -21,7 +21,7 @@
     neovim
     python3
     ripgrep
-    terraform_0_10
+    terraform_0_11
     unrar
     unzip
     vifm
