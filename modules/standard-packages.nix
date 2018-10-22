@@ -4,6 +4,7 @@
   environment.systemPackages = with pkgs; [
     awscli
     beam.packages.erlangR20.elixir
+    ctags
     curl
     dmenu2
     dnsutils
