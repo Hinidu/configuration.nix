@@ -13,6 +13,7 @@
     file
     fish
     git
+    gnumake
     go_1_10
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
