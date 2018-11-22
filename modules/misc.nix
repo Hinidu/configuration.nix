@@ -11,4 +11,13 @@
   time.timeZone = "Europe/Kaliningrad";
 
   services.openssh.enable = true;
+
+  security.pam.loginLimits = [
+    {
+      domain = "hinidu";
+      type = "-";
+      item = "nofile";
+      value = "65536";
+    }
+  ];
 }
