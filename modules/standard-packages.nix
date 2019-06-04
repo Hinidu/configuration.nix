@@ -22,7 +22,7 @@
       self.xmonad-contrib
     ]))
     neovim
-    python3
+    (python3.withPackages (self: [self.boto3]))
     ripgrep
     terraform_0_11
     unrar
