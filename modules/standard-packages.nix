@@ -3,12 +3,12 @@
 {
   environment.systemPackages = with pkgs; [
     awscli
-    beam.packages.erlangR20.elixir
+    beam.packages.erlangR21.elixir
     ctags
     curl
     dmenu2
     dnsutils
-    erlangR20
+    erlangR21
     f2fs-tools
     file
     fish
