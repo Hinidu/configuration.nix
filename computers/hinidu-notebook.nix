@@ -5,6 +5,7 @@
     [ ../modules/env.nix
       ../modules/i18n.nix
       ../modules/misc.nix
+      ../modules/sound.nix
       ../modules/standard-packages.nix
       ../modules/xserver.nix
       ../users/hinidu.nix
