@@ -41,5 +41,7 @@
     SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4ee2", MODE="0600", OWNER="hinidu"
   '';
 
+  services.unclutter.enable = true;
+
   virtualisation.docker.enable = true;
 }
