@@ -6,7 +6,7 @@
     beam.packages.erlangR21.elixir
     ctags
     curl
-    dmenu2
+    dmenu
     dnsutils
     erlangR21
     f2fs-tools
