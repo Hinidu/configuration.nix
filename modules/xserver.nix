@@ -128,6 +128,7 @@
     slack
     steam
     steam-run
+    tdesktop
     transmission
     unity3d
     xclip
