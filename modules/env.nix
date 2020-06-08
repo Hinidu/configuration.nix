@@ -2,5 +2,5 @@
 
 {
   environment.variables.EDITOR = "nvim";
-  environment.variables.GOPATH = "~/go";
+  environment.variables.GOPATH = "$HOME/go";
 }
