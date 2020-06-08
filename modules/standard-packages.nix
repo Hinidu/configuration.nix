@@ -32,7 +32,6 @@
     xlibs.xmessage
     xorg.luit
     zip
-    zoom-us
   ];
 
   programs.fish.enable = true;

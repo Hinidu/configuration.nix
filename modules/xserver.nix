@@ -132,6 +132,7 @@
     unity3d
     xclip
     zathura
+    zoom-us
   ];
 
   # Is needed for Unity3D
