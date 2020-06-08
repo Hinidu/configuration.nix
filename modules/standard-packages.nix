@@ -14,7 +14,7 @@
     fish
     git
     gnumake
-    go_1_10
+    go_1_13
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
       self.xmobar
