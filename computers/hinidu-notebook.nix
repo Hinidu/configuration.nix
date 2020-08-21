@@ -20,8 +20,20 @@
   networking.firewall.enable = false;
   networking.wireless.enable = true;
   networking.wireless.networks = {
-    platto = {
-      pskRaw = "a221a823136bc15fa6c4fd919612c72113915fe9fa4582d6feda6d98bcf15814";
+    platto_repeater = {
+      pskRaw = "94987dc4da6ebce67d3716eb10add3a3071731b68313865f4f2e1ec80ab4f560";
+    };
+
+    WARNING = {
+      pskRaw = "8bd116eda8ffea342d351cacba288e5d2e5486730f1813a6481775857cbc9ed0";
+    };
+
+    # platto = {
+    #   pskRaw = "a221a823136bc15fa6c4fd919612c72113915fe9fa4582d6feda6d98bcf15814";
+    # };
+
+    "iPhone (Павел)" = {
+      pskRaw = "0f1396b8121cc9e410ce791480b2dad34f997382c34a9169cf5930d0d7ad90c6";
     };
   };
 
