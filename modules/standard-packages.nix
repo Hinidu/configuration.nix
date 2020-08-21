@@ -24,7 +24,7 @@
     neovim
     (python3.withPackages (self: [self.boto3 self.paramiko]))
     ripgrep
-    terraform_0_12
+    terraform_0_13
     unrar
     unzip
     vifm
