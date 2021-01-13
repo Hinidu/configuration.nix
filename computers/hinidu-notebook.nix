@@ -3,7 +3,6 @@
 {
   imports =
     [ ../modules/env.nix
-      ../modules/hosts.nix
       ../modules/i18n.nix
       ../modules/misc.nix
       ../modules/openvpn-client.nix
