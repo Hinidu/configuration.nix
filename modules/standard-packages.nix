@@ -2,7 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
-    awscli
+    awscli2
     beam.packages.erlangR21.elixir
     ctags
     curl
