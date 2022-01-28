@@ -27,6 +27,10 @@
       pskRaw = "8bd116eda8ffea342d351cacba288e5d2e5486730f1813a6481775857cbc9ed0";
     };
 
+    PanzerDog = {
+      pskRaw = "1aa52b600a923da39673567df28c800e25c5f2f100941c306831753ef3f768a8";
+    };
+
     # platto = {
     #   pskRaw = "a221a823136bc15fa6c4fd919612c72113915fe9fa4582d6feda6d98bcf15814";
     # };
