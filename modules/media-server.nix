@@ -5,6 +5,7 @@
   services.transmission.settings = {
     download-dir = "/media/torrents/";
     incomplete-dir-enabled = false;
+    package = pkgs.transmission_4;
     rpc-whitelist = "127.0.0.1,10.39.119.*";
     umask = 2;
   };
