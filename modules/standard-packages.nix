@@ -3,18 +3,18 @@
 {
   environment.systemPackages = with pkgs; [
     awscli2
-    beam.packages.erlangR21.elixir
+    beam.packages.erlang_24.elixir_1_12
     ctags
     curl
     dmenu
     dnsutils
-    erlangR21
+    dotnetCorePackages.sdk_8_0
+    erlang_24
     f2fs-tools
     file
     fish
     git
     gnumake
-    go_1_15
     (haskellPackages.ghcWithPackages (self: [
       self.ghc
       self.xmobar
@@ -22,19 +22,24 @@
       self.xmonad-contrib
     ]))
     neovim
+    openssl
+    pinentry
     (python3.withPackages (self: [self.boto3 self.paramiko]))
     ripgrep
-    terraform_0_13
+    terraform
     unrar
     unzip
     vifm
     wget
-    xlibs.xmessage
+    xorg.xmessage
     xorg.luit
     zip
   ];
 
   programs.fish.enable = true;
+  programs.gnupg.agent = {
+    enable = true;
+  };
   programs.ssh.startAgent = true;
 
   services.udev.extraRules = ''

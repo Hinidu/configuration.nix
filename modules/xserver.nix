@@ -1,13 +1,20 @@
 { config, pkgs, lib, ... }:
 
 {
+  # Move somewhere
+  services.libinput.enable = false;
+
   # Enable the X11 windowing system.
   services.xserver = {
     enable = true;
-    layout = "us,ru";
-    xkbOptions = "grp:alt_shift_toggle,grp_led:scroll";
 
-    videoDrivers = [ "intel" "nouveau" ];
+    xkb = {
+      layout = "us,ru";
+      options = "grp:alt_shift_toggle,grp_led:scroll";
+    };
+
+    dpi = 200;
+    upscaleDefaultCursor = true;
 
     synaptics = {
       enable = true;
@@ -99,17 +106,18 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
-    chromium
+    google-chrome
     libreoffice
     mpv
-    rxvt_unicode
+    rxvt-unicode
     scrot
     slack
+    steam
     steam-run
     tdesktop
-    transmission
-    unity3d
+    unityhub
     xclip
+    xorg.xbacklight
     zathura
     zoom-us
   ];
@@ -117,7 +125,5 @@
   # Is needed for Unity3D
   security.chromiumSuidSandbox.enable = true;
 
-  fonts.fonts = [ pkgs.source-code-pro ];
-
-  services.teamviewer.enable = true;
+  fonts.packages = [ pkgs.corefonts pkgs.source-code-pro ];
 }
