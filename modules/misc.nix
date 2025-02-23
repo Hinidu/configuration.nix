@@ -4,7 +4,7 @@
   hardware.cpu.intel.updateMicrocode = true;
 
   # Is needed for Steam
-  hardware.opengl.driSupport32Bit = true;
+  hardware.graphics.enable32Bit = true;
 
   nix.gc.automatic = true;
 
