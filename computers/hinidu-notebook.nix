@@ -4,6 +4,7 @@
   imports =
     [ ../modules/env.nix
       ../modules/i18n.nix
+      ../modules/media-server.nix
       ../modules/misc.nix
       ../modules/openvpn-client.nix
       ../modules/standard-packages.nix

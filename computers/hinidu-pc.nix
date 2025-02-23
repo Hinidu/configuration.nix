@@ -4,6 +4,7 @@
   imports =
     [ ../modules/boot.nix
       ../modules/i18n.nix
+      ../modules/media-server.nix
       ../modules/misc.nix
       ../modules/openvpn-client.nix
       ../modules/standard-packages.nix
@@ -19,14 +20,6 @@
   networking.hostName = "hinidu_pc";
   networking.firewall.enable = false;
   networking.wireless.enable = true;
-
-  services.transmission.enable = true;
-  services.transmission.settings = {
-    download-dir = "/media/tmp/movies/";
-    incomplete-dir-enabled = false;
-    rpc-whitelist = "127.0.0.1,192.168.1.*";
-    umask = 2;
-  };
 
   services.xserver.xrandrHeads = ["VGA1" "HDMI1"];
 
