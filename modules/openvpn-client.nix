@@ -2,6 +2,9 @@
 
 {
   services.openvpn.servers = {
-    barbos = { config = ''config /etc/openvpn/barbos.ovpn''; };
+    niceplans = {
+      autoStart = false;
+      config = ''config /etc/openvpn/niceplans.ovpn'';
+    };
   };
 }
