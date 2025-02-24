@@ -10,7 +10,6 @@
       ../modules/standard-packages.nix
       ../modules/xserver.nix
       ../users/hinidu.nix
-      ../users/olga.nix
     ];
 
   fileSystems."/".options = ["defaults" "noatime" "discard" "inline_xattr"];
