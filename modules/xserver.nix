@@ -125,5 +125,5 @@
   # Is needed for Unity3D
   security.chromiumSuidSandbox.enable = true;
 
-  fonts.packages = [ pkgs.corefonts pkgs.source-code-pro ];
+  fonts.packages = with pkgs; [ corefonts nerdfonts source-code-pro ];
 }
