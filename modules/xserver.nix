@@ -114,7 +114,7 @@
     slack
     steam
     steam-run
-    tdesktop
+    telegram-desktop
     unityhub
     xclip
     xorg.xbacklight
