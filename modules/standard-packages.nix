@@ -23,7 +23,7 @@
     ]))
     neovim
     openssl
-    pinentry
+    pinentry-curses
     (python3.withPackages (self: [self.boto3 self.paramiko]))
     ripgrep
     terraform
