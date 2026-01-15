@@ -3,13 +3,13 @@
 {
   environment.systemPackages = with pkgs; [
     awscli2
-    beam.packages.erlang_24.elixir_1_12
+    beam.packages.erlang_26.elixir_1_15
     ctags
     curl
     dmenu
     dnsutils
     dotnetCorePackages.sdk_8_0
-    erlang_24
+    erlang_26
     f2fs-tools
     file
     fish
