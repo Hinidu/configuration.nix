@@ -24,7 +24,13 @@
     secretsFile = "/etc/nixos/wifi-secrets.env";
 
     networks = {
-      platto = {
+      platto_5g = {
+        priority = 5;
+        pskRaw = "ext:psk_home";
+      };
+
+      platto_vpn_5g = {
+        priority = 8;
         pskRaw = "ext:psk_home";
       };
 
