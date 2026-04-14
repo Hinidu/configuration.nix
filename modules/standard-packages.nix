@@ -36,6 +36,8 @@
     zip
   ];
 
+  programs.amnezia-vpn.enable = true;
+
   programs.fish.enable = true;
   programs.gnupg.agent = {
     enable = true;
