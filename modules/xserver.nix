@@ -120,6 +120,12 @@
     xorg.xbacklight
     zathura
     zoom-us
+
+    (writeShellScriptBin "unityhub-3k" ''
+      export GDK_SCALE=2
+      export GDK_DPI_SCALE=0.5
+      exec ${unityhub}/bin/unityhub "$@"
+    '')
   ];
 
   # Is needed for Unity3D
