@@ -10,7 +10,7 @@
     curl
     dmenu
     dnsutils
-    dotnetCorePackages.sdk_8_0
+    dotnetCorePackages.sdk_10_0
     elixir-ls
     elmPackages.elm
     erlang_27
