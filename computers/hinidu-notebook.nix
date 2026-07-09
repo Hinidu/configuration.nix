@@ -41,5 +41,7 @@
     };
   };
 
+  systemd.services.wpa_supplicant.serviceConfig.BindReadOnlyPaths = [ "/etc/nixos/wifi-secrets.env" ];
+
   boot.supportedFilesystems = ["exfat"];
 }
