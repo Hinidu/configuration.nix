@@ -3,13 +3,17 @@
 {
   environment.systemPackages = with pkgs; [
     awscli2
-    beam.packages.erlang_26.elixir_1_15
+    beam.packages.erlang_27.elixir_1_17
+    binutils
+    csharp-ls
     ctags
     curl
     dmenu
     dnsutils
     dotnetCorePackages.sdk_8_0
-    erlang_26
+    elixir-ls
+    elmPackages.elm
+    erlang_27
     f2fs-tools
     file
     fish
@@ -21,11 +25,19 @@
       self.xmonad
       self.xmonad-contrib
     ]))
+    htop
+    imagemagick
+    inetutils
+    jq
+    lshw
     neovim
     openssl
+    p7zip
+    pamixer
     pinentry-curses
     (python3.withPackages (self: [self.boto3 self.paramiko]))
     ripgrep
+    ruby
     terraform
     unrar
     unzip
