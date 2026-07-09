@@ -106,7 +106,11 @@
   nixpkgs.config.allowUnfree = true;
 
   environment.systemPackages = with pkgs; [
+    amnezia-vpn
+    audacity
+    feh
     google-chrome
+    kitty
     libreoffice
     mpv
     rxvt-unicode
@@ -115,10 +119,14 @@
     steam
     steam-run
     telegram-desktop
+    tigervnc
+    qpdf
+    unetbootin
     unityhub
     xclip
     xorg.xbacklight
     zathura
+    zed-editor
     zoom-us
 
     (writeShellScriptBin "unityhub-3k" ''
