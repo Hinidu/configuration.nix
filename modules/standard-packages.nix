@@ -37,7 +37,18 @@
     p7zip
     pamixer
     pinentry-curses
-    (python3.withPackages (self: [self.boto3 self.paramiko]))
+    poppler-utils
+    (python3.withPackages (
+      ps: with ps; [
+        boto3
+        paramiko
+        pandas
+        matplotlib
+        duckdb
+        pyarrow
+        pymupdf
+      ]
+    ))
     ripgrep
     roslyn-ls
     ruby
