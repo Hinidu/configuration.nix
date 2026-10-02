@@ -59,6 +59,17 @@
   };
   programs.ssh.startAgent = true;
 
+  programs.nix-ld.enable = true;
+  programs.nix-ld.libraries = with pkgs; [
+    stdenv.cc.cc
+    zlib
+    icu
+    openssl
+    libcap
+    attr
+    util-linux
+  ];
+
   services.udev.extraRules = ''
     SUBSYSTEM=="usb", ATTR{idVendor}=="18d1", ATTR{idProduct}=="4ee2", MODE="0600", OWNER="hinidu"
   '';
