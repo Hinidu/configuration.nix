@@ -31,6 +31,8 @@
     jq
     lshw
     neovim
+    nil
+    nixpkgs-fmt
     openssl
     p7zip
     pamixer
