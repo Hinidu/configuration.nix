@@ -2,6 +2,7 @@
 
 {
   environment.systemPackages = with pkgs; [
+    android-tools
     awscli2
     beam.packages.erlang_27.elixir_1_17
     binutils
@@ -33,6 +34,7 @@
     neovim
     nil
     nixpkgs-fmt
+    nodejs
     openssl
     p7zip
     pamixer
@@ -52,6 +54,7 @@
     ripgrep
     roslyn-ls
     ruby
+    ssm-session-manager-plugin
     terraform
     unrar
     unzip
