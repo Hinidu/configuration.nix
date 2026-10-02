@@ -31,6 +31,7 @@
     inetutils
     jq
     lshw
+    luit
     neovim
     nil
     nixpkgs-fmt
@@ -60,8 +61,7 @@
     unzip
     vifm
     wget
-    xorg.xmessage
-    xorg.luit
+    xmessage
     zip
   ];
 

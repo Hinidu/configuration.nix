@@ -123,8 +123,8 @@
     qpdf
     unetbootin
     unityhub
+    xbacklight
     xclip
-    xorg.xbacklight
     zathura
     zed-editor
     zoom-us
