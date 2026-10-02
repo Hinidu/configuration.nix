@@ -2,17 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Personal NixOS system configuration (no flakes). nixpkgs comes from a local git checkout at
-`/home/hinidu/sources/nixpkgs` (a release tag, detached HEAD), not from channels: root has no
-`nixos` channel, and the user's `nixos` channel in `~/.nix-defexpr` isn't what the system is built from.
+Personal NixOS system configuration (no flakes, channels disabled). nixpkgs comes from a local git
+checkout at `/home/hinidu/sources/nixpkgs` (a release tag, detached HEAD), wired in via `nix.nixPath`
+in `modules/misc.nix`; upgrading NixOS means checking out a newer tag there. Packages are installed
+declaratively only, not via `nix-env`.
 
 ## Checking changes
 
-The user applies the config themselves (`sudo nixos-rebuild switch -I nixpkgs=/home/hinidu/sources/nixpkgs/`),
-so don't run it. To verify that the config evaluates and see what would be built:
+The user applies the config themselves (`sudo nixos-rebuild switch`), so don't run it. To verify that
+the config evaluates and see what would be built:
 
 ```sh
-nixos-rebuild dry-build -I nixpkgs=/home/hinidu/sources/nixpkgs/
+nixos-rebuild dry-build
 ```
 
 - It must run outside the Bash sandbox (the sandbox hides parts of `/nix/var/nix/profiles`).

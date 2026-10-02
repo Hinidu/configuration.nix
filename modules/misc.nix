@@ -8,6 +8,13 @@
 
   nix.gc.automatic = true;
 
+  # nixpkgs comes from a local git checkout instead of channels
+  nix.channel.enable = false;
+  nix.nixPath = [
+    "nixpkgs=/home/hinidu/sources/nixpkgs"
+    "nixos-config=/etc/nixos/configuration.nix"
+  ];
+
   time.timeZone = "Europe/Kaliningrad";
 
   services.openssh.enable = true;
