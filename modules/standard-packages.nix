@@ -6,6 +6,8 @@
     awscli2
     beam.packages.erlang_27.elixir_1_17
     binutils
+    claude-agent-acp
+    claude-code
     csharp-ls
     ctags
     curl
