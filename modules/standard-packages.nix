@@ -52,6 +52,7 @@
         duckdb
         pyarrow
         pymupdf
+        xlrd
       ]
     ))
     ripgrep
