@@ -41,6 +41,7 @@
     openssl
     p7zip
     pamixer
+    (callPackage ../packages/perfetto.nix { })
     pinentry-curses
     poppler-utils
     (python3.withPackages (
