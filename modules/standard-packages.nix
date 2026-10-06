@@ -62,6 +62,7 @@
     terraform
     unrar
     unzip
+    uv
     vifm
     wget
     xmessage
