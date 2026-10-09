@@ -63,6 +63,7 @@
     terraform
     unrar
     unzip
+    usbutils
     uv
     vifm
     wget
