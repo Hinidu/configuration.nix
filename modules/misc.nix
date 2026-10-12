@@ -8,10 +8,12 @@
 
   nix.gc.automatic = true;
 
-  # nixpkgs comes from a local git checkout instead of channels
+  # nixpkgs and home-manager come from local git checkouts instead of channels;
+  # home-manager must be on the release branch matching the nixpkgs tag
   nix.channel.enable = false;
   nix.nixPath = [
     "nixpkgs=/home/hinidu/sources/nixpkgs"
+    "home-manager=/home/hinidu/sources/home-manager"
     "nixos-config=/etc/nixos/configuration.nix"
   ];
 

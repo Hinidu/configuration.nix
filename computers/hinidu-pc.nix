@@ -8,7 +8,7 @@
       ../modules/openvpn-client.nix
       ../modules/standard-packages.nix
       ../modules/xserver.nix
-      ../users/hinidu.nix
+      ../users/hinidu
     ];
 
   networking.hostName = "hinidu_pc";

@@ -31,7 +31,10 @@ Formatter: `nixpkgs-fmt` (language server: `nil`).
   The active host is `hinidu-notebook`.
 - `modules/` contains shared feature modules; most changes go to `modules/standard-packages.nix`
   (system packages, `programs.*`, nix-ld libraries).
-- `users/hinidu.nix` defines the single user.
+- `users/hinidu/default.nix` defines the single user; `users/hinidu/home/` is that user's
+  Home Manager config (dotfiles). home-manager comes from a local checkout at
+  `/home/hinidu/sources/home-manager` (release branch matching the nixpkgs tag), wired in via
+  `nix.nixPath` like nixpkgs.
 
 Known stale bits: `computers/hinidu-pc.nix` and `computers/virtualbox-guest-dev.nix` aren't used
 now; the latter imports `modules/boot.nix`, which no longer exists.

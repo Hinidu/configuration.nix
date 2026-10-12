@@ -6,7 +6,7 @@
       ../modules/i18n.nix
       ../modules/standard-packages.nix
       ../modules/xserver.nix
-      ../users/hinidu.nix
+      ../users/hinidu
     ];
 
   nix.gc.automatic = true;

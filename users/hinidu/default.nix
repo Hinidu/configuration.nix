@@ -1,6 +1,16 @@
 { config, pkgs, ... }:
 
 {
+  imports = [ <home-manager/nixos> ];
+
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    # Move aside unmanaged files that are in the way instead of failing
+    backupFileExtension = "hm-backup";
+    users.hinidu = import ./home;
+  };
+
   users.extraUsers.hinidu = {
     isNormalUser = true;
     group = "hinidu";

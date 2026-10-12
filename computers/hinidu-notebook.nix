@@ -8,7 +8,7 @@
       ../modules/openvpn-client.nix
       ../modules/standard-packages.nix
       ../modules/xserver.nix
-      ../users/hinidu.nix
+      ../users/hinidu
     ];
 
   #fileSystems."/".options = ["defaults" "noatime" "discard" "inline_xattr"];
