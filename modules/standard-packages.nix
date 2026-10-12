@@ -56,6 +56,7 @@
         xlrd
       ]
     ))
+    rclone
     ripgrep
     roslyn-ls
     ruby
