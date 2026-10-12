@@ -6,7 +6,13 @@
   # Is needed for Steam
   hardware.graphics.enable32Bit = true;
 
-  nix.gc.automatic = true;
+  # Without deleting old generations GC frees almost nothing, and /boot (512M)
+  # overflows with kernels and initrds of every generation ever built
+  nix.gc = {
+    automatic = true;
+    options = "--delete-older-than 30d";
+  };
+  boot.loader.systemd-boot.configurationLimit = 10;
 
   # nixpkgs and home-manager come from local git checkouts instead of channels;
   # home-manager must be on the release branch matching the nixpkgs tag
