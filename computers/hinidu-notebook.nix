@@ -15,7 +15,6 @@
   #fileSystems."/boot".options = ["defaults" "noatime" "discard"];
 
   networking.hostName = "hinidu_notebook";
-  networking.firewall.enable = false;
   networking.wireless = {
     enable = true;
 
