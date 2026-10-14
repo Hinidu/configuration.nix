@@ -68,6 +68,7 @@
     ruby
     ssm-session-manager-plugin
     terraform
+    typescript
     unrar
     unzip
     usbutils
