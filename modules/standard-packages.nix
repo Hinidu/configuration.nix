@@ -7,7 +7,13 @@
     beam.packages.erlang_27.elixir_1_17
     binutils
     claude-agent-acp
-    claude-code
+    (claude-code.overrideAttrs (_: {
+      version = "2.1.299";
+      src = fetchurl {
+        url = "https://storage.googleapis.com/claude-code-dist-86c565f3-f756-42ad-8dfa-d59b1c096819/claude-code-releases/2.1.299/linux-x64/claude";
+        sha256 = "2d894a4b1bfaaa9aab72aeff7803e3c73bc2510f279a171f6b8f59f72d17d077";
+      };
+    }))
     csharp-ls
     ctags
     curl
