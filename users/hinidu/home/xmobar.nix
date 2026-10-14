@@ -24,8 +24,11 @@ let
   );
 
   lowBatteryAction = pkgs.writeShellScript "xmobar-low-battery" ''
-    # A fixed replace id keeps a single notification instead of one per refresh
+    # A fixed replace id keeps a single notification instead of one per refresh.
+    # xmobar runs this on every refresh while discharging, and never on AC, so
+    # the timeout (longer than the refresh) makes it vanish after plugging in.
     exec ${pkgs.libnotify}/bin/notify-send --urgency=critical --replace-id=4242 \
+      --expire-time=15000 \
       "Батарея почти разряжена" "Пора подключить зарядку"
   '';
 in
@@ -116,7 +119,7 @@ in
                                         , "-O", "<fc=#268bd2>${glyph "f1e6"}</fc>"
                                         , "-i", "<fc=#268bd2>${glyph "f1e6"}</fc>"
                                         , "-o", "<fc=#268bd2>${glyph "f242"}</fc>"
-                                        , "-A", "5"
+                                        , "-A", "10"
                                         , "-a", "${lowBatteryAction}"
                                         ] 50
                           , Run Date "<fc=#CB4B16>${glyph "f017"} %a %d.%m %H:%M</fc>" "date" 100
