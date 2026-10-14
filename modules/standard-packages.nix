@@ -39,6 +39,7 @@
     inetutils
     jq
     lshw
+    lua5_1
     luit
     neovim
     nil
@@ -63,6 +64,7 @@
       ]
     ))
     rclone
+    redis
     ripgrep
     roslyn-ls
     ruby
