@@ -17,6 +17,9 @@ nixos-rebuild dry-build
 ```
 
 - It must run outside the Bash sandbox (the sandbox hides parts of `/nix/var/nix/profiles`).
+- If it fails with `file 'home-manager/nixos' was not found`, the shell's `NIX_PATH` lacks the
+  `home-manager` entry; run it with the full path from `modules/misc.nix`:
+  `NIX_PATH="nixpkgs=/home/hinidu/sources/nixpkgs:home-manager=/home/hinidu/sources/home-manager:nixos-config=/etc/nixos/configuration.nix" nixos-rebuild dry-build`
 - Treat new evaluation warnings (renamed/obsolete options) as something to report.
 
 Formatter: `nixpkgs-fmt` (language server: `nil`).
@@ -30,7 +33,8 @@ Formatter: `nixpkgs-fmt` (language server: `nil`).
   to import and holds host-only settings (hostname, Wi-Fi networks, xrandr heads).
   The active host is `hinidu-notebook`.
 - `modules/` contains shared feature modules; most changes go to `modules/standard-packages.nix`
-  (system packages, `programs.*`, nix-ld libraries).
+  (system packages, `programs.*`, nix-ld libraries). `environment.systemPackages` is kept in
+  alphabetical order; insert new packages at their sorted position.
 - `users/hinidu/default.nix` defines the single user; `users/hinidu/home/` is that user's
   Home Manager config (dotfiles). home-manager comes from a local checkout at
   `/home/hinidu/sources/home-manager` (release branch matching the nixpkgs tag), wired in via
