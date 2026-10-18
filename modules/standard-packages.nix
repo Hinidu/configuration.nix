@@ -14,6 +14,9 @@
         sha256 = "2d894a4b1bfaaa9aab72aeff7803e3c73bc2510f279a171f6b8f59f72d17d077";
       };
     }))
+    clang
+    clang-tools
+    cmake
     csharp-ls
     ctags
     curl
@@ -38,6 +41,7 @@
     imagemagick
     inetutils
     jq
+    lldb
     lshw
     lua5_1
     luit
