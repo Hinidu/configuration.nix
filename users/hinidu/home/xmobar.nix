@@ -120,6 +120,9 @@ in
                                         , "-i", "<fc=#268bd2>${glyph "f1e6"}</fc>"
                                         , "-o", "<fc=#268bd2>${glyph "f242"}</fc>"
                                         , "-A", "10"
+                                        -- xmobar defaults to AC/online and silently
+                                        -- treats a missing file as being on battery
+                                        , "-f", "AC0/online"
                                         , "-a", "${lowBatteryAction}"
                                         ] 50
                           , Run Date "<fc=#CB4B16>${glyph "f017"} %a %d.%m %H:%M</fc>" "date" 100
