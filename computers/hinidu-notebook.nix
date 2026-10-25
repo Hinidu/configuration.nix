@@ -24,7 +24,7 @@
 
     networks = {
       platto_5g = {
-        priority = 5;
+        priority = 9;
         pskRaw = "ext:psk_home";
       };
 
