@@ -27,6 +27,7 @@
     elmPackages.elm
     erlang_27
     f2fs-tools
+    ffmpeg
     file
     fish
     git
