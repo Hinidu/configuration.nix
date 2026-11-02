@@ -68,6 +68,7 @@
         xlrd
       ]
     ))
+    qrencode
     rclone
     redis
     ripgrep
