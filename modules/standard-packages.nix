@@ -83,6 +83,7 @@
     vifm
     wget
     xmessage
+    xray
     zip
   ];
 
