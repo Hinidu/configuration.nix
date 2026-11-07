@@ -6,6 +6,7 @@
     awscli2
     beam.packages.erlang_27.elixir_1_17
     binutils
+    blender
     claude-agent-acp
     (claude-code.overrideAttrs (_: {
       version = "2.1.299";
