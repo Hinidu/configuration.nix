@@ -241,8 +241,29 @@ filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
         \ gpicview %c,
         \ {View in shotwell}
         \ shotwell,
-fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
-         \ convert -identify %f -verbose /dev/null
+" kitty and Ghostty speak the kitty graphics protocol: draw the image right
+" in the preview pane and wipe it when the pane switches to something else.
+" kitty often paints the frame before the new image is ready and then waits
+" for more output or input, so the image showed up only after a key press
+" (reproduced in kitty 0.47 under Xvfb). Any later output makes it repaint,
+" hence the harmless save/restore cursor kick after icat.
+" Don't use %pd here: vifm then replays the whole growing output on every
+" chunk it reads, so a GIF gets redrawn over and over.
+" Keep --transfer-mode explicit: without it icat queries the terminal and
+" waits for an answer that vifm reads first.
+" %N keeps /dev/tty, which icat needs to ask the terminal for its pixel size.
+if $TERM == 'xterm-kitty' || $TERM == 'xterm-ghostty'
+    fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp
+             \ sh -c 'kitten icat --silent --stdin=no --transfer-mode=stream
+             \                    --place=%pwx%ph@%pxx%py "$1";
+             \        sleep 0.1; printf "\0337\0338"' icat %c
+             \    >/dev/tty </dev/tty %N
+             \ %pc
+             \ kitten icat --clear --silent >/dev/tty </dev/tty %N
+else
+    fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp
+             \ convert -identify %f -verbose /dev/null
+endif
 
 " OpenRaster
 filextype *.ora
