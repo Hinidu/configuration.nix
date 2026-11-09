@@ -99,6 +99,7 @@
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
+      config = ./xmonad.hs;
     };
   };
 
@@ -108,6 +109,7 @@
   environment.systemPackages = with pkgs; [
     amnezia-vpn
     audacity
+    brightnessctl
     feh
     google-chrome
     kitty
@@ -123,7 +125,6 @@
     qpdf
     unetbootin
     unityhub
-    xbacklight
     xclip
     zathura
     zed-editor

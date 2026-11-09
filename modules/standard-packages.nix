@@ -31,14 +31,9 @@
     ffmpeg
     file
     fish
+    ghc
     git
     gnumake
-    (haskellPackages.ghcWithPackages (self: [
-      self.ghc
-      self.xmobar
-      self.xmonad
-      self.xmonad-contrib
-    ]))
     htop
     imagemagick
     inetutils

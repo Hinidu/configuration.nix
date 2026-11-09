@@ -39,7 +39,7 @@ in
   programs.xmobar = {
     enable = true;
 
-    # Solarized light; xmonad feeds workspaces and the title via stdin
+    # Solarized light; xmonad feeds workspaces via the _XMONAD_LOG property
     extraConfig = ''
       Config { font = "FiraCode Nerd Font 10"
              -- <fn=1> for secondary details, to save space on the bar
@@ -135,13 +135,13 @@ in
                                                 , "--high", "#DC322F"
                                                 ] 600
                           , Run Kbd [("us", "US"), ("ru", "RU")]
-                          , Run StdinReader
+                          , Run XMonadLog
                           ]
              , sepChar = "%"
              , alignSep = "}{"
              -- Two spaces between widgets; details without an icon of their own
              -- (load, frequency, top processes, traffic) stick to their widget with one
-             , template = " <fc=#6c71c4><icon=${./xmobar/nixos.xbm}/></fc> %StdinReader% }{ <fn=1>%uptime%</fn>  %multicpu% %load% %cpufreq% %top%  %coretemp%  %memory% %topmem%  %swap%  %wlo1wi% %dynnetwork%  %disku%  %alsa:default:Master%  %battery%  %date%  %UMKK%  <fc=#859900>${glyph "f11c"} %kbd%</fc> "
+             , template = " <fc=#6c71c4><icon=${./xmobar/nixos.xbm}/></fc> %XMonadLog% }{ <fn=1>%uptime%</fn>  %multicpu% %load% %cpufreq% %top%  %coretemp%  %memory% %topmem%  %swap%  %wlo1wi% %dynnetwork%  %disku%  %alsa:default:Master%  %battery%  %date%  %UMKK%  <fc=#859900>${glyph "f11c"} %kbd%</fc> "
              }
     '';
   };
