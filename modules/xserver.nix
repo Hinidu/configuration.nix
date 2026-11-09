@@ -23,6 +23,7 @@
 
     displayManager.sessionCommands = ''
       xrdb "${pkgs.writeText "xrdb.conf" ''
+        Xft.dpi: 200
         URxvt.font: xft:FiraCode Nerd Font:size=10:autohint=true:antialias=true
         URxvt.perl-ext-common: default,matcher
         URxvt.scrollBar: off
