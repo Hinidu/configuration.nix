@@ -126,6 +126,7 @@
     unetbootin
     unityhub
     xclip
+    xdotool
     zathura
     zed-editor
     zoom-us

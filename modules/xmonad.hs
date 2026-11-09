@@ -93,6 +93,10 @@ keys' =
     -- which only works for configs compiled from ~/.xmonad)
     , ((modMask', xK_q), restart "xmonad" True)
     , ((modMask' .|. shiftMask, xK_t), sendMessage ToggleStruts)
+    -- Jump to the window that asked for attention, e.g. a Claude Code session
+    -- waiting for input (its Notification hook sets the urgency hint on the
+    -- terminal's $WINDOWID with xdotool)
+    , ((modMask', xK_u), focusUrgent)
     , ((0, xK_Print), screenshot "")
     , ((controlMask, xK_Print), screenshot "--select")
     , ((modMask', xK_Print), screenshot "--focused --border")
