@@ -3,6 +3,7 @@
 {
   imports = [
     ./git.nix
+    ./terminals.nix
     ./xmobar.nix
   ];
 

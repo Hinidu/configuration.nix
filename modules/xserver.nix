@@ -113,7 +113,6 @@
     brightnessctl
     feh
     google-chrome
-    kitty
     libreoffice
     mpv
     rxvt-unicode
