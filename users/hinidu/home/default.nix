@@ -4,6 +4,7 @@
   imports = [
     ./git.nix
     ./terminals.nix
+    ./vifm.nix
     ./xmobar.nix
   ];
 

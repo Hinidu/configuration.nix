@@ -77,7 +77,6 @@
     unzip
     usbutils
     uv
-    vifm
     wget
     xmessage
     xray
