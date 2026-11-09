@@ -42,5 +42,12 @@
 
   systemd.services.wpa_supplicant.serviceConfig.BindReadOnlyPaths = [ "/etc/nixos/wifi-secrets.env" ];
 
+  # mDNS/DNS-SD: resolve *.local names (e.g. the MacBook) and discover LAN
+  # services; the module also opens UDP 5353 in the firewall
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+  };
+
   boot.supportedFilesystems = ["exfat"];
 }
