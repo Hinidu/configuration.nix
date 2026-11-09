@@ -3,7 +3,7 @@
 {
   imports = [
     ./git.nix
-    ./terminals.nix
+    ./kitty.nix
     ./vifm.nix
     ./xmobar.nix
   ];

@@ -241,7 +241,7 @@ filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
         \ gpicview %c,
         \ {View in shotwell}
         \ shotwell,
-" kitty and Ghostty speak the kitty graphics protocol: draw the image right
+" kitty speaks its own graphics protocol: draw the image right
 " in the preview pane and wipe it when the pane switches to something else.
 " kitty often paints the frame before the new image is ready and then waits
 " for more output or input, so the image showed up only after a key press
@@ -252,7 +252,7 @@ filextype *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm
 " Keep --transfer-mode explicit: without it icat queries the terminal and
 " waits for an answer that vifm reads first.
 " %N keeps /dev/tty, which icat needs to ask the terminal for its pixel size.
-if $TERM == 'xterm-kitty' || $TERM == 'xterm-ghostty'
+if $TERM == 'xterm-kitty'
     fileviewer *.bmp,*.jpg,*.jpeg,*.png,*.gif,*.xpm,*.webp
              \ sh -c 'kitten icat --silent --stdin=no --transfer-mode=stream
              \                    --place=%pwx%ph@%pxx%py "$1";

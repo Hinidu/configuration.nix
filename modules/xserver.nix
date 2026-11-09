@@ -24,19 +24,6 @@
     displayManager.sessionCommands = ''
       xrdb "${pkgs.writeText "xrdb.conf" ''
         Xft.dpi: 200
-        URxvt.font: xft:FiraCode Nerd Font:size=10:autohint=true:antialias=true
-        URxvt.perl-ext-common: default,matcher
-        URxvt.scrollBar: off
-        URxvt.scrollTtyOutput: false
-        URxvt.scrollWithBuffer: true
-        URxvt.scrollTtyKeypress: true
-        URxvt.saveLines: 100000
-        URxvt.termName: xterm-256color
-        URxvt.url-launcher: chromium
-        URxvt.matcher.button: 1
-        URxvt.underlineURLs: true
-        URxvt.urgentOnBell: true
-        URxvt.cursorBlink: true
 
         #define S_base03        #002b36
         #define S_base02        #073642
@@ -115,7 +102,6 @@
     google-chrome
     libreoffice
     mpv
-    rxvt-unicode
     scrot
     slack
     steam

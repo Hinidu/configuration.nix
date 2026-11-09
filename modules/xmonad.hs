@@ -113,8 +113,6 @@ keysP' =
     [ ("M-x c", spawn "google-chrome-stable")
     , ("M-x x", spawn "google-chrome-stable --incognito")
     , ("M-x v", spawn $ terminal' ++ " -e nvim")
-    -- The second terminal on trial, see users/hinidu/home/terminals.nix
-    , ("M-x g", spawn "ghostty")
     , ("M-x u", spawn "unityhub-3k")
     , ("M-x s", spawn "slack")
     , ("M-x p", spawn "zathura")
