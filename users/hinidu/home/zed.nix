@@ -10,8 +10,6 @@
       relative_line_numbers = "enabled";
 
       theme = "Ayu Mirage";
-      ui_font_size = 11.0;
-      buffer_font_size = 10.0;
 
       project_panel.dock = "left";
       outline_panel.dock = "left";
