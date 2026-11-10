@@ -6,6 +6,7 @@
     ./git.nix
     ./kitty.nix
     ./mpv.nix
+    ./ssh.nix
     ./vifm.nix
     ./xmobar.nix
   ];
