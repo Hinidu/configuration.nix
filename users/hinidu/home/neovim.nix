@@ -9,6 +9,7 @@
       vifm-vim
       vim-airline
       vim-airline-themes
+      vim-elixir
       vim-eunuch
       vim-fugitive
       vim-gitgutter
