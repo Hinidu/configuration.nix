@@ -19,7 +19,6 @@
     clang-tools
     cmake
     csharp-ls
-    ctags
     curl
     dmenu
     dnsutils
