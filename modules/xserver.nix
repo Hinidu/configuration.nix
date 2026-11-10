@@ -101,7 +101,6 @@
     feh
     google-chrome
     libreoffice
-    mpv
     scrot
     slack
     steam

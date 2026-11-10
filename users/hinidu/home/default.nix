@@ -5,6 +5,7 @@
     ./fish.nix
     ./git.nix
     ./kitty.nix
+    ./mpv.nix
     ./vifm.nix
     ./xmobar.nix
   ];
