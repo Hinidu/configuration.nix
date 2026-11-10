@@ -113,7 +113,6 @@
     xclip
     xdotool
     zathura
-    zed-editor
     zoom-us
 
     (writeShellScriptBin "unityhub-3k" ''

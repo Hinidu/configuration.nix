@@ -11,6 +11,7 @@
     ./ssh.nix
     ./vifm.nix
     ./xmobar.nix
+    ./zed.nix
   ];
 
   home.stateVersion = "26.05";
