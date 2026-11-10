@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./fish.nix
     ./git.nix
     ./kitty.nix
     ./vifm.nix
