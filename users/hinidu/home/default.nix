@@ -10,6 +10,7 @@
     ./mpv.nix
     ./neovim.nix
     ./ssh.nix
+    ./terraform.nix
     ./vifm.nix
     ./xmobar.nix
     ./zed.nix
