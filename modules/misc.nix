@@ -17,6 +17,9 @@
   # nixpkgs and home-manager come from local git checkouts instead of channels;
   # home-manager must be on the release branch matching the nixpkgs tag
   nix.channel.enable = false;
+  # Otherwise every nix-env call (Home Manager activation runs one) recreates
+  # ~/.nix-defexpr/channels, and activation warns that channels are disabled
+  nix.settings.use-xdg-base-directories = true;
   nix.nixPath = [
     "nixpkgs=/home/hinidu/sources/nixpkgs"
     "home-manager=/home/hinidu/sources/home-manager"
