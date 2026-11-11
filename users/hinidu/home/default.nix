@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ./agents.nix
     ./claude.nix
     ./fish.nix
     ./git.nix
