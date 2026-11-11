@@ -62,6 +62,20 @@ in
       # Hold space to dictate a prompt
       voice.enabled = true;
       theme = "light";
+      # Claude would run `xdg-mime default`, which fails on the read-only
+      # mimeapps.list; the handler below is registered declaratively instead
+      disableDeepLinkRegistration = "disable";
     };
   };
+
+  # claude-cli:// deep links. Exec goes through PATH, so the entry survives
+  # claude-code upgrades (Claude's own entry pins a /nix/store path)
+  xdg.desktopEntries.claude-code-url-handler = {
+    name = "Claude Code URL Handler";
+    comment = "Handle claude-cli:// deep links for Claude Code";
+    exec = "claude --handle-uri %u";
+    noDisplay = true;
+    mimeType = [ "x-scheme-handler/claude-cli" ];
+  };
+  xdg.mimeApps.defaultApplications."x-scheme-handler/claude-cli" = "claude-code-url-handler.desktop";
 }

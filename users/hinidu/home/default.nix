@@ -6,6 +6,7 @@
     ./fish.nix
     ./git.nix
     ./kitty.nix
+    ./mime-apps.nix
     ./mpv.nix
     ./neovim.nix
     ./ssh.nix
