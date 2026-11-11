@@ -2,6 +2,8 @@
 
 {
   environment.systemPackages = with pkgs; [
+    amneziawg-go
+    amneziawg-tools
     android-tools
     awscli2
     beam.packages.erlang_27.elixir_1_17
