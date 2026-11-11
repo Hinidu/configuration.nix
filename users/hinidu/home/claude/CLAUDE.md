@@ -34,6 +34,11 @@ for my explicit "ok" on exactly those edits. Approval to commit one batch of
 changes doesn't extend to the next: even if I said "commit" earlier, new edits
 go to review first again. The same applies to amend and push.
 
+When the work is done and the only thing left is my "ok" on the commit (or
+amend/push), the task is waiting on me, not finished: end the message with a
+`needs input:` line (e.g. `needs input: ok to commit these changes?`), not
+with `result:`. Use `result:` only once there's nothing left for me to approve.
+
 Don't ask separately about rebase: if I ask you to push and the branch is
 behind, do `pull --rebase` yourself when there are no conflicts, and just tell
 me which commits you rebased onto. If there are conflicts, stop and ask.
