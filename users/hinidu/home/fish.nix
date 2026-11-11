@@ -11,7 +11,4 @@
       body = "claude agents --cwd . $argv";
     };
   };
-
-  # Global npm packages, see prefix in ~/.npmrc
-  home.sessionPath = [ "$HOME/.local/npm/bin" ];
 }
