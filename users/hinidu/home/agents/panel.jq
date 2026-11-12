@@ -1,6 +1,8 @@
 # Text of the conky side panel: every visible session with its full name and,
 # for the ones waiting for you, the question. $columns is the panel width in
-# characters; $bodyColor and $focusColor are hex without "#", from
+# characters, $columnWidth the width of one in conky's units, $gotoOrigin
+# where ${goto} puts column 0, $iconShift how much to raise a line around an
+# icon (see agents.nix); $bodyColor and $focusColor are hex without "#", from
 # modules/solarized.nix.
 import "sessions" as sessions;
 
@@ -14,6 +16,11 @@ def questionColor: color("#\($bodyColor)");
 def ageColor: color("#\($bodyColor)");
 
 def numberColor: color("#\($bodyColor)");
+# Icons get a bigger font: they are wider than the two columns they used to
+# take, so they are put between the columns, and the text after one is moved
+# back to its column. A column may be fractional.
+def toColumn($column): "${goto \($gotoOrigin + $column * $columnWidth | round)}";
+def icon: "${voffset \(-$iconShift)}${font2}\(.)${font}${voffset \(-$iconShift)}";
 # The session of the focused window, colored like the current workspace on the
 # bar: a green stripe along all its lines in the panel's left margin and a
 # green name. The stripe is pulled into the margin by its own width so that the
@@ -40,13 +47,14 @@ def cronWhen:
   end;
 
 # Lines of one thing the session waits for: an icon, then the text wrapped
-# under it, at most $maxLines of them
-def waitLines($icon; $text; $maxLines):
+# under it, at most $maxLines of them. Not "$icon": a parameter named so is
+# also a local "icon" filter and would hide the def above.
+def waitLines($glyph; $text; $maxLines):
   ($text | sessions::wrap($columns - 6)) as $lines
   | $lines[0:$maxLines]
   | if ($lines | length) > $maxLines then .[-1] += "…" else . end
   | to_entries
-  | map(if .key == 0 then indent + ("\($icon) " | color("#268BD2")) else indent + "  " end
+  | map(if .key == 0 then toColumn(3.5) + ($glyph | icon | color("#268BD2")) + toColumn(6) else indent + "  " end
         + (.value | escape | questionColor));
 
 # What a finished session that will wake up by itself waits for: its
@@ -73,7 +81,7 @@ def render($number):
   | (sessions::sessionName | sessions::wrap($columns - 4)
      | map(escape | if $focused then color("#\($focusColor)") else . end)) as $nameLines
   | ((.needs // "") | sessions::wrap($columns - 4)) as $questionLines
-  | [ ("\($number) " | numberColor) + ("\($style.icon) " | color($style.color)) + $nameLines[0] ]
+  | [ ("\($number)" | numberColor) + toColumn(1.5) + ($style.icon | icon | color($style.color)) + toColumn(4) + $nameLines[0] ]
     + ($nameLines[1:] | map(indent + .))
     + ($questionLines[0:maxQuestionLines] | map(indent + (escape | questionColor)))
     + (if ($questionLines | length) > maxQuestionLines then [indent + ("…" | questionColor)] else [] end)
@@ -86,10 +94,10 @@ def count($state): map(select(.state == $state)) | length;
 
 sessions::visibleSessions
 | [ "${font1}Агенты${font}${alignr}"
-    + ([ ("\uf256 \(count("blocked"))" | color("#DC322F")),
-         ("\uf252 \(count("working"))" | color("#B58900")),
-         ("\uf017 \(count("scheduled"))" | color("#268BD2")),
-         ("\uf00c \(count("done"))" | color("#859900")) ] | join("  ")),
+    + ([ (("\uf256" | icon) + " \(count("blocked"))" | color("#DC322F")),
+         (("\uf252" | icon) + " \(count("working"))" | color("#B58900")),
+         (("\uf017" | icon) + " \(count("scheduled"))" | color("#268BD2")),
+         (("\uf00c" | icon) + " \(count("done"))" | color("#859900")) ] | join("  ")),
     "" ]
   + (if length == 0 then ["агенты отдыхают" | ageColor]
      else to_entries | map(.key as $index | .value | render($index + 1) + [""]) | add

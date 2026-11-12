@@ -32,11 +32,35 @@ let
   # text area is exactly this many characters wide
   panelColumns = 34;
   panelTextWidth = builtins.ceil (panelColumns * panelFontPixels * 0.6);
+  # Icons are a third bigger than the text: at the text size they are smaller
+  # than its capitals
+  panelIconPixels = builtins.floor (panelFontPixels * 1.3 + 0.5);
   panelMargin = 16;
   # Below both xmobar lines (48 + 38 px) down to the bottom of the 2200 px
   # screen; conky counts the position from the screen top, xmonad sets no work area
   panelTop = 86;
   panelTextHeight = 2200 - panelTop - 2 * panelMargin;
+  # For panel.jq to put the icons and the text after them on their columns with
+  # ''${goto}, which counts from the window edge, not the text area: one
+  # character and the margin in conky's units
+  panelColumnWidth = panelFontPixels * 0.6 * 96.0 / xDpi;
+  panelGotoOrigin = conkyPixels panelMargin;
+  # conky lowers the rest of a line to the baseline of its biggest font, so
+  # panel.jq raises the line back by this much before and after an icon: half
+  # of the extra ascent of the icon font each time (FiraCode's ascent is 1.1 em)
+  panelIconShift = conkyPixels ((panelIconPixels - panelFontPixels) * 1.1 / 2);
+
+  # The panel's text. conky cuts an exec command at about 255 characters, and
+  # with the store paths and all the arguments this one is longer, so conky
+  # gets only the short path of this script
+  panelText = pkgs.writeShellScript "agents-panel-text" ''
+    exec ${pkgs.lib.getExe readStates} ${filters}/panel.jq \
+      --argjson columns ${toString panelColumns} \
+      --argjson columnWidth ${toString panelColumnWidth} \
+      --argjson gotoOrigin ${toString panelGotoOrigin} \
+      --argjson iconShift ${toString panelIconShift} \
+      ${jqColorArgs}
+  '';
 
   # M-s <number> in xmonad: the window of the session with that number, or a
   # new one
@@ -118,6 +142,8 @@ in
       font = 'FiraCode Nerd Font:pixelsize=${toString panelFontPixels}',
       -- The panel header
       font1 = 'FiraCode Nerd Font:bold:pixelsize=${toString panelFontPixels}',
+      -- Icons
+      font2 = 'FiraCode Nerd Font:pixelsize=${toString panelIconPixels}',
       default_color = '${hex colors.emphasis}',
       draw_borders = false,
       draw_shades = false,
@@ -128,7 +154,7 @@ in
     }
 
     conky.text = [[
-    ''${execpi 2 ${pkgs.lib.getExe readStates} ${filters}/panel.jq --argjson columns ${toString panelColumns} ${jqColorArgs}}
+    ''${execpi 2 ${panelText}}
     ]]
   '';
 }
