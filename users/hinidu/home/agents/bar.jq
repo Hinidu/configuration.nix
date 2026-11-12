@@ -2,7 +2,7 @@
 # every visible session. The questions themselves are shown by the side panel.
 import "sessions" as sessions;
 
-# $bodyColor: hex without "#", from modules/solarized.nix
+# $bodyColor, $focusColor: hex without "#", from modules/solarized.nix
 def mutedColor: "#\($bodyColor)";
 
 # Short names, so that many sessions fit
@@ -11,13 +11,18 @@ def maxNameLength: 25;
 # Session text goes through <raw/>, so its "<" can't open an xmobar tag
 def raw: "<raw=\(length):\(.)/>";
 def color($hex): "<fc=\($hex)>\(.)</fc>";
+# The session of the focused window is underlined like the current workspace
+# on the main line
+def underline: "<box type=Bottom width=4 color=#\($focusColor)>\(.)</box>";
 
 # $number is what M-s <number> in xmonad jumps to
 def render($number):
   sessions::stateStyle as $style
+  | sessions::isFocused as $focused
   | ("\($number)" | color(mutedColor)) + ("\($style.icon) " | color($style.color))
     + (sessions::sessionName | sessions::truncate(maxNameLength) | raw)
-    + (if $style.known then "" else (" (\(.state | tostring | raw))" | color(mutedColor)) end);
+    + (if $style.known then "" else (" (\(.state | tostring | raw))" | color(mutedColor)) end)
+  | if $focused then underline else . end;
 
 sessions::visibleSessions
 | if length == 0 then "агенты отдыхают" | color(mutedColor)

@@ -8,14 +8,16 @@ let
   # conky's text would take a "#" as a comment start, so the jq filters get
   # colors without it
   hex = color: pkgs.lib.removePrefix "#" color;
-  jqColorArgs = "--arg bodyColor ${hex colors.body}";
+  # The session of the focused window is marked green, like the current
+  # workspace on the main line
+  jqColorArgs = "--arg bodyColor ${hex colors.body} --arg focusColor ${hex colors.green}";
 
   # jq filters; bar.jq and panel.jq import the shared sessions.jq
   filters = ./agents;
 
   readStates = pkgs.writeShellApplication {
     name = "agents-read-states";
-    runtimeInputs = [ pkgs.jq ];
+    runtimeInputs = with pkgs; [ jq xdotool ];
     text = builtins.readFile ./agents/read-states.sh;
   };
 
@@ -86,7 +88,7 @@ in
            , persistent = False
            , border = NoBorder
            -- Every 2 seconds; the daemon updates the job states itself
-           , commands = [ Run Com "${pkgs.lib.getExe readStates}" ["${filters}/bar.jq", "--arg", "bodyColor", "${hex colors.body}"] "agents" 20 ]
+           , commands = [ Run Com "${pkgs.lib.getExe readStates}" ["${filters}/bar.jq", "--arg", "bodyColor", "${hex colors.body}", "--arg", "focusColor", "${hex colors.green}"] "agents" 20 ]
            , sepChar = "%"
            , alignSep = "}{"
            , template = " %agents% }{ "

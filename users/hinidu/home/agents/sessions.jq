@@ -12,6 +12,13 @@ def truncate($maxLength):
 
 def sessionName: .name // .daemonShort;
 
+# Whether the focused kitty window shows this session: an attached session
+# names the terminal after itself, with a status sign in front ("◐ name",
+# "✳ name"). The same match as agents-focus-window uses to find the window.
+def isFocused:
+  sessionName as $name
+  | $focusedTitle == $name or ($focusedTitle | endswith(" " + $name));
+
 # When the session last changed its state as far as you're concerned
 def stateSince:
   (if .state == "done" then .lastTerminalAt // .updatedAt else .updatedAt end) | epochSeconds;

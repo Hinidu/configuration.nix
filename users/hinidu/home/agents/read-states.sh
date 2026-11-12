@@ -1,9 +1,17 @@
 # Runs a jq filter over the state.json files of all Claude Code background
 # sessions: read-states <filter.jq> [jq arguments...]. The filter may import
-# modules lying next to it (sessions.jq).
+# modules lying next to it (sessions.jq) and gets $focusedTitle: the title of
+# the focused kitty window, empty if the focus is elsewhere.
 summary_filter=$1
 shift
-jq_command=(jq -L "$(dirname "$summary_filter")" -r "$@" -f "$summary_filter")
+
+focused_title=""
+if focused_window=$(xdotool getwindowfocus 2>/dev/null) \
+    && [[ $(xdotool getwindowclassname "$focused_window" 2>/dev/null) == kitty ]]; then
+    focused_title=$(xdotool getwindowname "$focused_window" 2>/dev/null) || focused_title=""
+fi
+
+jq_command=(jq -L "$(dirname "$summary_filter")" -r --arg focusedTitle "$focused_title" "$@" -f "$summary_filter")
 
 shopt -s nullglob
 state_files=("$HOME"/.claude/jobs/*/state.json)
