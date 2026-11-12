@@ -2,7 +2,8 @@
 
 {
   imports =
-    [ ../modules/env.nix
+    [ ../modules/display.nix
+      ../modules/env.nix
       ../modules/i18n.nix
       ../modules/misc.nix
       ../modules/openvpn-client.nix
@@ -17,6 +18,12 @@
 
   # "light" for working on the balcony or by the window in direct sunlight
   solarized.variant = "dark";
+
+  # 3300x2200 on 293 mm: about 286 real dpi, scaled down to keep more on screen
+  display = {
+    dpi = 200;
+    height = 2200;
+  };
 
   networking.hostName = "hinidu_notebook";
   networking.wireless = {

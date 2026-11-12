@@ -12,6 +12,10 @@ let
   # workspace on the main line
   jqColorArgs = "--arg bodyColor ${hex colors.body} --arg focusColor ${hex colors.green}";
 
+  # Screen, dpi and the sizes of both xmobar lines: modules/display.nix
+  display = osConfig.display;
+  bars = display.bars;
+
   # jq filters; bar.jq and panel.jq import the shared sessions.jq
   filters = ./agents;
 
@@ -21,13 +25,13 @@ let
     text = builtins.readFile ./agents/read-states.sh;
   };
 
-  xDpi = osConfig.services.xserver.dpi;
+  xDpi = display.dpi;
   # conky multiplies every size and gap by Xft.dpi / 96 (but not a font's
   # pixelsize), so real pixels are divided back
   conkyPixels = realPixels: builtins.floor (realPixels * 96.0 / xDpi + 0.5);
 
-  # The font of the main xmobar line, 10 pt
-  panelFontPixels = builtins.floor (10 * xDpi / 72.0 + 0.5);
+  # The font of the main xmobar line
+  panelFontPixels = display.pixels bars.main.font;
   # Lines are wrapped by panel.jq; FiraCode glyphs are 0.6 em wide, so the
   # text area is exactly this many characters wide
   panelColumns = 34;
@@ -35,19 +39,20 @@ let
   # Icons are a third bigger than the text: at the text size they are smaller
   # than its capitals
   panelIconPixels = builtins.floor (panelFontPixels * 1.3 + 0.5);
-  panelMargin = 16;
+  # 16 px at 200 dpi
+  panelMargin = display.pixels 5.75;
   # What conky makes of a value in its units: each one is scaled and rounded
   # to real pixels separately
   conkyRealPixels = units: builtins.floor (units * xDpi / 96.0 + 0.5);
   panelMarginReal = conkyRealPixels (conkyPixels panelMargin);
-  # Below both xmobar lines (48 + 38 px) down to the bottom of the 2200 px
-  # screen; conky counts the position from the screen top, xmonad sets no work area
-  panelTop = 86;
+  # Below both xmobar lines down to the bottom of the screen; conky counts the
+  # position from the screen top, xmonad sets no work area
+  panelTop = bars.main.height + bars.agents.height;
   # The text area's top in conky's units, rounded up: conky can't hit every
   # real pixel, and a panel a pixel too high covers the bottom row of the
   # agents bar, where the focused session is underlined
   panelGapY = builtins.ceil ((panelTop + panelMarginReal) * 96.0 / xDpi);
-  panelTextHeight = 2200 - (conkyRealPixels panelGapY + panelMarginReal);
+  panelTextHeight = display.height - (conkyRealPixels panelGapY + panelMarginReal);
   # For panel.jq to put the icons and the text after them on their columns with
   # ''${goto}, which counts from the window edge, not the text area: one
   # character and the margin in conky's units
@@ -105,14 +110,14 @@ in
 
   # Started by xmonad as a second status bar, right below the main one
   xdg.configFile."xmobar/agents.xmobarrc".text = ''
-    Config { font = "FiraCode Nerd Font 8"
-           , dpi = 200
+    Config { font = "FiraCode Nerd Font ${toString bars.agents.font}"
+           , dpi = ${toString xDpi}
            -- The highlight background like the side panel: sets both apart from
            -- the main line and the windows
            , bgColor = "${colors.backgroundHighlight}"
            , fgColor = "${colors.emphasis}"
            -- Height, left/right margins, top margin = the main bar's height, bottom margin
-           , position = TopHM 38 0 0 48 0
+           , position = TopHM ${toString bars.agents.height} 0 0 ${toString bars.main.height} 0
            , lowerOnStart = False
            , hideOnStart = False
            , allDesktops = True
@@ -120,7 +125,7 @@ in
            , persistent = False
            , border = NoBorder
            -- Every 2 seconds; the daemon updates the job states itself
-           , commands = [ Run Com "${pkgs.lib.getExe readStates}" ["${filters}/bar.jq", "--arg", "bodyColor", "${hex colors.body}", "--arg", "focusColor", "${hex colors.green}"] "agents" 20 ]
+           , commands = [ Run Com "${pkgs.lib.getExe readStates}" ["${filters}/bar.jq", "--arg", "bodyColor", "${hex colors.body}", "--arg", "focusColor", "${hex colors.green}", "--argjson", "underlineWidth", "${toString bars.underlineWidth}"] "agents" 20 ]
            , sepChar = "%"
            , alignSep = "}{"
            , template = " %agents% }{ "

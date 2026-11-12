@@ -30,7 +30,8 @@ Formatter: `nixpkgs-fmt` (language server: `nil`).
   `configuration.nix` only holds boot loader, network interface and `stateVersion` settings, and
   imports exactly one file from `computers/`.
 - `computers/<host>.nix` is the per-host entry point: it picks the set of `modules/` and `users/`
-  to import and holds host-only settings (hostname, Wi-Fi networks, xrandr heads).
+  to import and holds host-only settings (hostname, Wi-Fi networks, xrandr heads, and the screen:
+  `display.dpi`/`display.height` from `modules/display.nix`, which every desktop size is derived from).
   The active host is `hinidu-notebook`.
 - `modules/` contains shared feature modules; most changes go to `modules/standard-packages.nix`
   (system packages, `programs.*`, nix-ld libraries). `environment.systemPackages` is kept in

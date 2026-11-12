@@ -50,7 +50,8 @@ xmobar' = statusBarProp "xmobar" (pure xmobarPP')
 xmobarAgents = statusBarGeneric "xmobar ~/.config/xmobar/agents.xmobarrc" mempty
 
 xmobarPP' = xmobarPP
-    { ppCurrent = xmobarBorder "Bottom" "#859900" 4 . xmobarColor "#859900" ""
+    -- The underline width is put in by modules/xserver.nix from the screen's dpi
+    { ppCurrent = xmobarBorder "Bottom" "#859900" @underlineWidth@ . xmobarColor "#859900" ""
     , ppUrgent  = xmobarColor "#dc322f" "" . wrap "[" "]" . xmobarStrip
     , ppTitle   = const ""
     , ppSep     = xmobarColor "#268bd2" "" " <+> "
@@ -136,7 +137,7 @@ keysP' =
     [ ("M-x c", spawn "google-chrome-stable")
     , ("M-x x", spawn "google-chrome-stable --incognito")
     , ("M-x v", spawn $ terminal' ++ " -e nvim")
-    , ("M-x u", spawn "unityhub-3k")
+    , ("M-x u", spawn "unityhub-scaled")
     , ("M-x s", spawn "slack")
     , ("M-x p", spawn "zathura")
     ]

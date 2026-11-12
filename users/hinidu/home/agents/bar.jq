@@ -2,7 +2,8 @@
 # every visible session. The questions themselves are shown by the side panel.
 import "sessions" as sessions;
 
-# $bodyColor, $focusColor: hex without "#", from modules/solarized.nix
+# $bodyColor, $focusColor: hex without "#", from modules/solarized.nix;
+# $underlineWidth: in pixels, from modules/display.nix
 def mutedColor: "#\($bodyColor)";
 
 # Short names, so that many sessions fit
@@ -13,7 +14,7 @@ def raw: "<raw=\(length):\(.)/>";
 def color($hex): "<fc=\($hex)>\(.)</fc>";
 # The session of the focused window is underlined like the current workspace
 # on the main line
-def underline: "<box type=Bottom width=4 color=#\($focusColor)>\(.)</box>";
+def underline: "<box type=Bottom width=\($underlineWidth) color=#\($focusColor)>\(.)</box>";
 
 # $number is what M-s <number> in xmonad jumps to
 def render($number):

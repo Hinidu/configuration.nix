@@ -2,6 +2,9 @@
 
 let
   colors = config.solarized.colors;
+  dpi = config.display.dpi;
+  # Whole-number GDK scale for apps that ignore Xft.dpi: 2 at 200 dpi
+  gdkScale = builtins.floor (dpi / 96.0 + 0.5);
 in
 {
   # Move somewhere
@@ -16,8 +19,9 @@ in
       options = "grp:alt_shift_toggle,grp_led:scroll";
     };
 
-    dpi = 200;
-    upscaleDefaultCursor = true;
+    inherit dpi;
+    # The default X cursor is tiny on a HiDPI screen
+    upscaleDefaultCursor = dpi >= 144;
 
     synaptics = {
       enable = true;
@@ -26,7 +30,7 @@ in
 
     displayManager.sessionCommands = ''
       xrdb "${pkgs.writeText "xrdb.conf" ''
-        Xft.dpi: 200
+        Xft.dpi: ${toString dpi}
 
         #define S_base03        #002b36
         #define S_base02        #073642
@@ -90,7 +94,9 @@ in
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
-      config = ./xmonad.hs;
+      config = builtins.replaceStrings [ "@underlineWidth@" ]
+        [ (toString config.display.bars.underlineWidth) ]
+        (builtins.readFile ./xmonad.hs);
     };
   };
 
@@ -118,9 +124,10 @@ in
     zathura
     zoom-us
 
-    (writeShellScriptBin "unityhub-3k" ''
-      export GDK_SCALE=2
-      export GDK_DPI_SCALE=0.5
+    # Unity Hub ignores Xft.dpi: scales the whole UI, then the fonts back
+    (writeShellScriptBin "unityhub-scaled" ''
+      export GDK_SCALE=${toString gdkScale}
+      export GDK_DPI_SCALE=${toString (1.0 / gdkScale)}
       exec ${unityhub}/bin/unityhub "$@"
     '')
   ];

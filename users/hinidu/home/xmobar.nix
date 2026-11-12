@@ -2,6 +2,8 @@
 
 let
   colors = osConfig.solarized.colors;
+  display = osConfig.display;
+  bar = display.bars.main;
 
   # Nerd Font glyph by its hex code point (BMP only)
   glyph = codePoint: builtins.fromJSON ''"\u${codePoint}"'';
@@ -43,14 +45,15 @@ in
 
     # Solarized (modules/solarized.nix); xmonad feeds workspaces via the _XMONAD_LOG property
     extraConfig = ''
-      Config { font = "FiraCode Nerd Font 10"
-             -- <fn=1> for secondary details, to save space on the bar
-             , additionalFonts = ["FiraCode Nerd Font 7"]
-             , dpi = 200
+      Config { font = "FiraCode Nerd Font ${toString bar.font}"
+             -- <fn=1> for secondary details, to save space on the bar;
+             -- <fn=2> for the NixOS logo, a glyph so that it scales with dpi
+             , additionalFonts = ["FiraCode Nerd Font 7", "FiraCode Nerd Font 12"]
+             , dpi = ${toString display.dpi}
              , bgColor = "${colors.background}"
              , fgColor = "${colors.emphasis}"
              -- Automatic height ignores dpi and clips the text, so set it explicitly
-             , position = TopH 48
+             , position = TopH ${toString bar.height}
              , lowerOnStart = False
              , hideOnStart = False
              , allDesktops = True
@@ -144,7 +147,7 @@ in
              , alignSep = "}{"
              -- Two spaces between widgets; details without an icon of their own
              -- (load, frequency, top processes, traffic) stick to their widget with one
-             , template = " <fc=#6c71c4><icon=${./xmobar/nixos.xbm}/></fc> %XMonadLog% }{ <fn=1>%uptime%</fn>  %multicpu% %load% %cpufreq% %top%  %coretemp%  %memory% %topmem%  %swap%  %wlo1wi% %dynnetwork%  %disku%  %alsa:default:Master%  %battery%  %date%  %UMKK%  <fc=#859900>${glyph "f11c"} %kbd%</fc> "
+             , template = " <fc=#6c71c4><fn=2>${glyph "f313"}</fn></fc> %XMonadLog% }{ <fn=1>%uptime%</fn>  %multicpu% %load% %cpufreq% %top%  %coretemp%  %memory% %topmem%  %swap%  %wlo1wi% %dynnetwork%  %disku%  %alsa:default:Master%  %battery%  %date%  %UMKK%  <fc=#859900>${glyph "f11c"} %kbd%</fc> "
              }
     '';
   };
