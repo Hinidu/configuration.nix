@@ -36,10 +36,18 @@ let
   # than its capitals
   panelIconPixels = builtins.floor (panelFontPixels * 1.3 + 0.5);
   panelMargin = 16;
+  # What conky makes of a value in its units: each one is scaled and rounded
+  # to real pixels separately
+  conkyRealPixels = units: builtins.floor (units * xDpi / 96.0 + 0.5);
+  panelMarginReal = conkyRealPixels (conkyPixels panelMargin);
   # Below both xmobar lines (48 + 38 px) down to the bottom of the 2200 px
   # screen; conky counts the position from the screen top, xmonad sets no work area
   panelTop = 86;
-  panelTextHeight = 2200 - panelTop - 2 * panelMargin;
+  # The text area's top in conky's units, rounded up: conky can't hit every
+  # real pixel, and a panel a pixel too high covers the bottom row of the
+  # agents bar, where the focused session is underlined
+  panelGapY = builtins.ceil ((panelTop + panelMarginReal) * 96.0 / xDpi);
+  panelTextHeight = 2200 - (conkyRealPixels panelGapY + panelMarginReal);
   # For panel.jq to put the icons and the text after them on their columns with
   # ''${goto}, which counts from the window edge, not the text area: one
   # character and the margin in conky's units
@@ -132,12 +140,14 @@ in
       -- The gaps and sizes are of the text area, so the window itself gets
       -- to the screen edge with the margin
       gap_x = ${toString (conkyPixels panelMargin)},
-      gap_y = ${toString (conkyPixels (panelTop + panelMargin))},
+      gap_y = ${toString panelGapY},
       minimum_width = ${toString (conkyPixels panelTextWidth)},
       maximum_width = ${toString (conkyPixels panelTextWidth)},
       minimum_height = ${toString (conkyPixels panelTextHeight)},
       border_inner_margin = ${toString (conkyPixels panelMargin)},
       border_width = 0,
+      -- 1 by default, it would move the window past the margins by 2 px
+      border_outer_margin = 0,
       use_xft = true,
       font = 'FiraCode Nerd Font:pixelsize=${toString panelFontPixels}',
       -- The panel header
