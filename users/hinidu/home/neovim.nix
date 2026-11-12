@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, osConfig, pkgs, ... }:
 
 # A light nvim for commit messages and small edits; real coding happens in Zed.
 {
@@ -15,6 +15,10 @@
       vim-gitgutter
       vim-move
     ];
-    extraConfig = builtins.readFile ./neovim/init.vim;
+    # Before init.vim, which sets the color scheme
+    extraConfig = ''
+      set background=${osConfig.solarized.variant}
+      let g:airline_solarized_bg = '${osConfig.solarized.variant}'
+    '' + builtins.readFile ./neovim/init.vim;
   };
 }

@@ -9,7 +9,7 @@ let mapleader = ' '
 " Plugins {{{
 
 " Solarized {{{
-set background=light
+" background (the variant) comes from modules/solarized.nix via neovim.nix
 colorscheme NeoSolarized
 " }}}
 
@@ -29,7 +29,6 @@ let g:move_key_modifier = 'C'
 
 " airline {{{
 let g:airline_theme = 'solarized'
-let g:airline_solarized_bg = 'light'
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#formatter = 'unique_tail_improved'
 let g:airline#extensions#tabline#buffer_idx_mode = 1

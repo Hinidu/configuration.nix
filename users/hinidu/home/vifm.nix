@@ -6,5 +6,5 @@
     extraConfig = builtins.readFile ./vifm/vifmrc;
   };
 
-  xdg.configFile."vifm/colors/solarized-light.vifm".source = ./vifm/solarized-light.vifm;
+  xdg.configFile."vifm/colors/solarized.vifm".source = ./vifm/solarized.vifm;
 }

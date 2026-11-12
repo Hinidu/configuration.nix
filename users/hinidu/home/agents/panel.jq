@@ -1,6 +1,6 @@
 # Text of the conky side panel: every visible session with its full name and,
 # for the ones waiting for you, the question. $columns is the panel width in
-# characters.
+# characters; $bodyColor is hex without "#", from modules/solarized.nix.
 import "sessions" as sessions;
 
 def maxQuestionLines: 6;
@@ -8,11 +8,11 @@ def maxQuestionLines: 6;
 # "$" starts a conky variable
 def escape: gsub("\\$"; "$$");
 def color($hex): "${color \($hex)}\(.)${color}";
-# Solarized base01 and base00: readable on the base2 background
-def questionColor: color("#586E75");
-def ageColor: color("#657B83");
+# Names get the panel's default (emphasized) color, the rest is body text
+def questionColor: color("#\($bodyColor)");
+def ageColor: color("#\($bodyColor)");
 
-def numberColor: color("#657B83");
+def numberColor: color("#\($bodyColor)");
 
 # Under the name, after the number and the icon
 def indent: "    ";

@@ -1,5 +1,8 @@
 { config, pkgs, lib, ... }:
 
+let
+  colors = config.solarized.colors;
+in
 {
   # Move somewhere
   services.libinput.enable = false;
@@ -34,12 +37,12 @@
         #define S_base2         #eee8d5
         #define S_base3         #fdf6e3
 
-        *background:            S_base3
-        *foreground:            S_base00
-        *fadeColor:             S_base3
-        *cursorColor:           S_base01
-        *pointerColorBackground:S_base1
-        *pointerColorForeground:S_base01
+        *background:            ${colors.background}
+        *foreground:            ${colors.body}
+        *fadeColor:             ${colors.background}
+        *cursorColor:           ${colors.emphasis}
+        *pointerColorBackground:${colors.secondary}
+        *pointerColorForeground:${colors.emphasis}
 
         #define S_yellow        #b58900
         #define S_orange        #cb4b16

@@ -1,6 +1,8 @@
-{ config, pkgs, ... }:
+{ config, osConfig, pkgs, ... }:
 
 let
+  colors = osConfig.solarized.colors;
+
   # Nerd Font glyph by its hex code point (BMP only)
   glyph = codePoint: builtins.fromJSON ''"\u${codePoint}"'';
 
@@ -39,14 +41,14 @@ in
   programs.xmobar = {
     enable = true;
 
-    # Solarized light; xmonad feeds workspaces via the _XMONAD_LOG property
+    # Solarized (modules/solarized.nix); xmonad feeds workspaces via the _XMONAD_LOG property
     extraConfig = ''
       Config { font = "FiraCode Nerd Font 10"
              -- <fn=1> for secondary details, to save space on the bar
              , additionalFonts = ["FiraCode Nerd Font 7"]
              , dpi = 200
-             , bgColor = "#fdf6e3"
-             , fgColor = "#002b36"
+             , bgColor = "${colors.background}"
+             , fgColor = "${colors.emphasis}"
              -- Automatic height ignores dpi and clips the text, so set it explicitly
              , position = TopH 48
              , lowerOnStart = False
@@ -57,7 +59,7 @@ in
              , border = NoBorder
              , commands = [ Run Uptime ["--template", "<fc=#2AA198>${glyph "f011"}</fc> <days>:<hours>:<minutes>"] 600
                           -- One bar per core; underlined so idle (empty) cores still show their slot
-                          , Run MultiCpu [ "--template", "<fc=#B58900>${glyph "f2db"}</fc> <box type=Bottom color=#93A1A1><vbar0><vbar1><vbar2><vbar3><vbar4><vbar5><vbar6><vbar7></box>"
+                          , Run MultiCpu [ "--template", "<fc=#B58900>${glyph "f2db"}</fc> <box type=Bottom color=${colors.secondary}><vbar0><vbar1><vbar2><vbar3><vbar4><vbar5><vbar6><vbar7></box>"
                                          , "--Low", "20"
                                          , "--High", "50"
                                          , "--normal", "#B58900"
@@ -75,11 +77,11 @@ in
                           , Run CpuFreq ["--template", "<fn=1><avg>G</fn>", "--ddigits", "1"] 50
                           -- The hungriest processes, to know whom to calm down when the laptop chokes;
                           -- CPU is per core like in top, so 100 means one core fully busy
-                          , Run TopProc [ "--template", "<fc=#93A1A1>(</fc><both1><fc=#93A1A1>)</fc>"
+                          , Run TopProc [ "--template", "<fc=${colors.secondary}>(</fc><both1><fc=${colors.secondary}>)</fc>"
                                         , "--High", "50"
                                         , "--high", "#DC322F"
                                         ] 20
-                          , Run TopMem [ "--template", "<fc=#93A1A1>(</fc><both1><fc=#93A1A1>)</fc>"
+                          , Run TopMem [ "--template", "<fc=${colors.secondary}>(</fc><both1><fc=${colors.secondary}>)</fc>"
                                        -- Percent of total RAM
                                        , "--High", "20"
                                        , "--high", "#DC322F"
@@ -98,7 +100,8 @@ in
                                      , "--normal", "#B58900"
                                      , "--high", "#DC322F"
                                      ] 50
-                          , Run DynNetwork ["-t", "${glyph "f063"} <rx> ${glyph "f062"} <tx>"] 10
+                          -- Orange like the Wi-Fi it sticks to
+                          , Run DynNetwork ["-t", "<fc=${colors.orange}>${glyph "f063"}</fc> <rx> <fc=${colors.orange}>${glyph "f062"}</fc> <tx>"] 10
                           , Run Wireless "wlo1" ["-t", "<fc=#CB4B16>${glyph "f1eb"} <essid></fc>"] 60
                           , Run DiskU [("/", "<fc=#DC322F>${glyph "f0a0"}</fc> <usedp>%")] [] 100
                           , Run Alsa "default" "Master" [ "--template", "<status> <volume>%"
@@ -127,7 +130,7 @@ in
                                         ] 50
                           , Run Date "<fc=#CB4B16>${glyph "f017"} %a %d.%m %H:%M</fc>" "date" 100
                           , Run WeatherX "UMKK" [${skyIconPairs}]
-                                                [ "--template", "<skyConditionS> <tempC>°"
+                                                [ "--template", "<fc=${colors.cyan}><skyConditionS></fc> <tempC>°"
                                                 , "--Low", "10"
                                                 , "--High", "20"
                                                 , "--low", "#268BD2"

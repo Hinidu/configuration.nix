@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, osConfig, lib, pkgs, ... }:
 
 let
   # Example mods from Anthropic, token-weather among them
@@ -61,7 +61,7 @@ in
       language = "Русский";
       # Hold space to dictate a prompt
       voice.enabled = true;
-      theme = "light";
+      theme = osConfig.solarized.variant;
       # Claude would run `xdg-mime default`, which fails on the read-only
       # mimeapps.list; the handler below is registered declaratively instead
       disableDeepLinkRegistration = "disable";

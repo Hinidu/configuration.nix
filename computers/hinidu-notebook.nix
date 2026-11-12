@@ -6,6 +6,7 @@
       ../modules/i18n.nix
       ../modules/misc.nix
       ../modules/openvpn-client.nix
+      ../modules/solarized.nix
       ../modules/standard-packages.nix
       ../modules/xserver.nix
       ../users/hinidu
@@ -13,6 +14,9 @@
 
   #fileSystems."/".options = ["defaults" "noatime" "discard" "inline_xattr"];
   #fileSystems."/boot".options = ["defaults" "noatime" "discard"];
+
+  # "light" for working on the balcony or by the window in direct sunlight
+  solarized.variant = "dark";
 
   networking.hostName = "hinidu_notebook";
   networking.wireless = {

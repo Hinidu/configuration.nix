@@ -4,6 +4,12 @@
 { config, osConfig, pkgs, ... }:
 
 let
+  colors = osConfig.solarized.colors;
+  # conky's text would take a "#" as a comment start, so the jq filters get
+  # colors without it
+  hex = color: pkgs.lib.removePrefix "#" color;
+  jqColorArgs = "--arg bodyColor ${hex colors.body}";
+
   # jq filters; bar.jq and panel.jq import the shared sessions.jq
   filters = ./agents;
 
@@ -67,10 +73,10 @@ in
   xdg.configFile."xmobar/agents.xmobarrc".text = ''
     Config { font = "FiraCode Nerd Font 8"
            , dpi = 200
-           -- Solarized base2 like the side panel: sets both apart from the
-           -- main line and the windows (base3)
-           , bgColor = "#eee8d5"
-           , fgColor = "#002b36"
+           -- The highlight background like the side panel: sets both apart from
+           -- the main line and the windows
+           , bgColor = "${colors.backgroundHighlight}"
+           , fgColor = "${colors.emphasis}"
            -- Height, left/right margins, top margin = the main bar's height, bottom margin
            , position = TopHM 38 0 0 48 0
            , lowerOnStart = False
@@ -80,7 +86,7 @@ in
            , persistent = False
            , border = NoBorder
            -- Every 2 seconds; the daemon updates the job states itself
-           , commands = [ Run Com "${pkgs.lib.getExe readStates}" ["${filters}/bar.jq"] "agents" 20 ]
+           , commands = [ Run Com "${pkgs.lib.getExe readStates}" ["${filters}/bar.jq", "--arg", "bodyColor", "${hex colors.body}"] "agents" 20 ]
            , sepChar = "%"
            , alignSep = "}{"
            , template = " %agents% }{ "
@@ -95,7 +101,7 @@ in
       own_window_type = 'panel',
       own_window_class = 'AgentsPanel',
       own_window_title = 'agents-panel',
-      own_window_colour = 'eee8d5',
+      own_window_colour = '${hex colors.backgroundHighlight}',
       alignment = 'top_left',
       -- The gaps and sizes are of the text area, so the window itself gets
       -- to the screen edge with the margin
@@ -110,7 +116,7 @@ in
       font = 'FiraCode Nerd Font:pixelsize=${toString panelFontPixels}',
       -- The panel header
       font1 = 'FiraCode Nerd Font:bold:pixelsize=${toString panelFontPixels}',
-      default_color = '002b36',
+      default_color = '${hex colors.emphasis}',
       draw_borders = false,
       draw_shades = false,
       draw_outline = false,
@@ -120,7 +126,7 @@ in
     }
 
     conky.text = [[
-    ''${execpi 2 ${pkgs.lib.getExe readStates} ${filters}/panel.jq --argjson columns ${toString panelColumns}}
+    ''${execpi 2 ${pkgs.lib.getExe readStates} ${filters}/panel.jq --argjson columns ${toString panelColumns} ${jqColorArgs}}
     ]]
   '';
 }

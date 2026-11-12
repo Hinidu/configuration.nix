@@ -1,5 +1,6 @@
 " VIFM COLORS
-" solarized dark
+" solarized, both variants: only the 16 terminal colors, which kitty maps
+" to the variant chosen in modules/solarized.nix
 " based on: https://github.com/istib/dotfiles/blob/master/vifm/vifm-colors
 
 " Default = -1 = None, can be used for transparency or default color
