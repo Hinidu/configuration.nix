@@ -24,6 +24,48 @@ def focusStripe: "${offset -6}" + ("▎" | color("#\($focusColor)")) + "${offset
 # Under the name, after the number and the icon
 def indent: "    ";
 
+def maxTaskLines: 3;
+
+# Material Design icons of Nerd Font (beyond the BMP, which jq can't escape):
+# a console window for a background shell, a calendar with a clock for a
+# cron job; not hourglasses, which already mean "working"
+def shellIcon: [983437] | implode;
+def cronIcon: [983280] | implode;
+
+# The schedule of a cron job: when a one-shot one fires ("13.11 06:43"), how
+# often a recurring one does ("Every 5 minutes", as CronCreate tells it)
+def cronWhen:
+  if .recurring then .schedule
+  else .nextRunAt | strflocaltime("%d.%m %H:%M")
+  end;
+
+# Lines of one thing the session waits for: an icon, then the text wrapped
+# under it, at most $maxLines of them
+def waitLines($icon; $text; $maxLines):
+  ($text | sessions::wrap($columns - 6)) as $lines
+  | $lines[0:$maxLines]
+  | if ($lines | length) > $maxLines then .[-1] += "…" else . end
+  | to_entries
+  | map(if .key == 0 then indent + ("\($icon) " | color("#268BD2")) else indent + "  " end
+        + (.value | escape | questionColor));
+
+# What a finished session that will wake up by itself waits for: its
+# background shells, with how long they run (a stuck loop shows itself by a
+# big number) and their description, or the command when there is none; and
+# its cron jobs with their schedule and the start of the prompt
+def waitingLines:
+  if .state != "scheduled" then []
+  else
+    [ .fan[]? | select(.doneAt == null)
+      | (.startedAt / 1000 | sessions::ageText) as $age
+      | if $taskDescriptions[.id] then waitLines(shellIcon; "\($age) · \($taskDescriptions[.id])"; maxTaskLines)
+        else waitLines(shellIcon; "\($age) · $ \(.label // .kind)" | sessions::truncate($columns - 6); 1)
+        end
+      | .[] ]
+    + [ ($sessionCrons[.daemonShort] // [])[]
+        | waitLines(cronIcon; "\(cronWhen) · \(.prompt)"; 2)[] ]
+  end;
+
 # $number is what M-s <number> in xmonad jumps to
 def render($number):
   sessions::stateStyle as $style
@@ -35,6 +77,7 @@ def render($number):
     + ($nameLines[1:] | map(indent + .))
     + ($questionLines[0:maxQuestionLines] | map(indent + (escape | questionColor)))
     + (if ($questionLines | length) > maxQuestionLines then [indent + ("…" | questionColor)] else [] end)
+    + waitingLines
     + [ indent + (([ (if $style.known then empty else .state | tostring | escape end),
                      (sessions::stateSince | sessions::ageText) ] | join(" · ")) | ageColor) ]
   | if $focused then map(focusStripe + .) else . end;

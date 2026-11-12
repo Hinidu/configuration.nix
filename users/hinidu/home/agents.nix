@@ -17,7 +17,7 @@ let
 
   readStates = pkgs.writeShellApplication {
     name = "agents-read-states";
-    runtimeInputs = with pkgs; [ jq xdotool ];
+    runtimeInputs = with pkgs; [ coreutils gnugrep jq xdotool ];
     text = builtins.readFile ./agents/read-states.sh;
   };
 
