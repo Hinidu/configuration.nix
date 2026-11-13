@@ -7,6 +7,7 @@
       ../modules/i18n.nix
       ../modules/misc.nix
       ../modules/openvpn-client.nix
+      ../modules/projects.nix
       ../modules/solarized.nix
       ../modules/standard-packages.nix
       ../modules/xserver.nix
@@ -24,6 +25,26 @@
     dpi = 200;
     height = 2200;
   };
+
+  # xmonad workspaces, M-1… in this order (modules/projects.nix)
+  desktop.projects = [
+    { name = "im"; }
+    { name = "web"; }
+    {
+      name = "work";
+      directory = "~/sources";
+      agentDirectories = [ "~/sources/ricochet" "~/sources/pubg" "~/sources/ricochet_terraform" ];
+    }
+    {
+      name = "sys";
+      directory = "/etc/nixos";
+      agentDirectories = [ "/etc/nixos" "~/vpn" ];
+    }
+    {
+      name = "home";
+      agentDirectories = [ "~/board_games" "~/smm" ];
+    }
+  ];
 
   networking.hostName = "hinidu_notebook";
   networking.wireless = {

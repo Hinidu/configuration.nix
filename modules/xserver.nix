@@ -5,6 +5,15 @@ let
   dpi = config.display.dpi;
   # Whole-number GDK scale for apps that ignore Xft.dpi: 2 at 200 dpi
   gdkScale = builtins.floor (dpi / 96.0 + 0.5);
+  bars = config.display.bars;
+
+  # desktop.projects (modules/projects.nix) as a Haskell list for xmonad.hs; a
+  # JSON string is a valid Haskell string literal for these plain names and paths
+  haskellProjects = "[ " + lib.concatMapStringsSep "\n    , "
+    (workspace: "Project { projectName = ${builtins.toJSON workspace.name}"
+      + ", projectDirectory = ${builtins.toJSON workspace.directory}"
+      + ", projectStartHook = Nothing }")
+    config.desktop.projects + "\n    ]";
 in
 {
   # Move somewhere
@@ -94,8 +103,18 @@ in
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
-      config = builtins.replaceStrings [ "@underlineWidth@" ]
-        [ (toString config.display.bars.underlineWidth) ]
+      config = builtins.replaceStrings
+        [ "@underlineWidth@" "@projects@" "@promptFont@" "@promptHeight@" "@background@" "@backgroundHighlight@" "@emphasis@" "@green@" ]
+        [
+          (toString bars.underlineWidth)
+          haskellProjects
+          (toString bars.main.font)
+          (toString bars.main.height)
+          colors.background
+          colors.backgroundHighlight
+          colors.emphasis
+          colors.green
+        ]
         (builtins.readFile ./xmonad.hs);
     };
   };

@@ -1,6 +1,7 @@
 {-# LANGUAGE UnicodeSyntax #-}
 
 import XMonad
+import XMonad.Actions.DynamicProjects
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
@@ -8,10 +9,12 @@ import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
 import XMonad.Layout.Grid
 import XMonad.Layout.NoBorders (smartBorders)
-import XMonad.Layout.PerWorkspace (onWorkspace)
+import XMonad.Layout.PerWorkspace (onWorkspaces)
+import XMonad.Prompt
 import XMonad.Util.EZConfig (additionalKeys, additionalKeysP)
 import XMonad.Util.Run (runProcessWithInput)
 import qualified XMonad.StackSet as W
+import Data.Maybe (isJust)
 import Text.Read (readMaybe)
 
 import Graphics.X11.ExtraTypes.XF86
@@ -23,9 +26,11 @@ main = getDirectories >>= launch myConfig
 myConfig = withSB (xmobar' <> xmobarAgents)
     . withUrgencyHookC NoUrgencyHook urgentConfig
     . docks
+    . dynamicProjects projects'
     $ def
     { terminal          = terminal'
     , workspaces        = workspaces'
+    , logHook           = removeAbandonedWorkspaces
     , layoutHook        = layoutHook'
     , startupHook       = startupHook'
     , manageHook        = manageHook' <+> manageHook def
@@ -39,7 +44,37 @@ modMask' = mod4Mask
 
 terminal' = "kitty"
 
-workspaces' = ["im", "web", "term", "dev", "unity", "read", "video", "mus", "unknown"]
+-- desktop.projects of the host (modules/projects.nix), M-1… in this order.
+-- Switching to a project's workspace makes its directory xmonad's own, so a
+-- terminal opened there starts in it.
+projects' =
+    @projects@
+
+workspaces' = map projectName projects'
+
+-- M-g makes workspaces on the fly that aren't in the list (e.g. "mac" for the
+-- VNC viewer); DynamicProjects doesn't remove them, so a left one that has no
+-- windows goes away here. The bar is updated after this hook, so it never
+-- shows such a workspace.
+removeAbandonedWorkspaces = modify $ \xstate ->
+    let windowSet = windowset xstate
+        isKept workspace = W.tag workspace `elem` workspaces' || isJust (W.stack workspace)
+    in xstate { windowset = windowSet { W.hidden = filter isKept (W.hidden windowSet) } }
+
+-- M-g / M-S-g: switch to or send the window to a project by name, Tab
+-- completes, a new name makes a new workspace; ` cycles through the other
+-- modes (send, rename, change the project's directory). Over the main bar,
+-- with its height and font.
+projectPrompt' = def
+    { font              = "xft:FiraCode Nerd Font:size=@promptFont@"
+    , bgColor           = "@backgroundHighlight@"
+    , fgColor           = "@emphasis@"
+    , bgHLight          = "@green@"
+    , fgHLight          = "@background@"
+    , promptBorderWidth = 0
+    , position          = Top
+    , height            = @promptHeight@
+    }
 
 -- xmobar reads its config from ~/.config/xmobar/xmobarrc (Home Manager) and
 -- gets workspaces from the _XMONAD_LOG property (the XMonadLog plugin)
@@ -59,12 +94,10 @@ xmobarPP' = xmobarPP
 
 urgentConfig = UrgencyConfig { suppressWhen = Focused, remindWhen = Dont }
 
+-- Project workspaces are mostly a handful of terminals, so a grid comes first
 layoutHook' = smartBorders $ avoidStruts
-    $ onWorkspace "im" (Full ||| Grid)
-    $ onWorkspace "web" (Full ||| Grid)
-    $ onWorkspace "term" (Grid ||| Full)
-    $ onWorkspace "dev" Full
-    $ layoutHook def
+    $ onWorkspaces ["im", "web"] (Full ||| Grid)
+    $ Grid ||| Full ||| layoutHook def
 
 -- Java GUI apps (JetBrains IDEs and the like) draw grey windows in
 -- non-reparenting window managers unless they think they run in LG3D
@@ -77,8 +110,7 @@ startupHook' = do
 manageHook' = composeAll
     [ className =? "slack"                --> doShift "im"
     , className =? "google-chrome-stable" --> doShift "web"
-    , className =? "Unity"                --> doShift "unity"
-    , title =? "zathura"                  --> doShift "read"
+    , className =? "Unity"                --> doShift "work"
     , className =? "Gxmessage"            --> doFloat
     , className =? "Kodi"                 --> doFloat
     , className =? "mpv"                  --> doFloat
@@ -134,7 +166,9 @@ focusAgent number = do
 
 keysP' =
     [ ("M-s " ++ show number, focusAgent number) | number <- [1 .. 9 :: Int] ] ++
-    [ ("M-x c", spawn "google-chrome-stable")
+    [ ("M-g", switchProjectPrompt projectPrompt')
+    , ("M-S-g", shiftToProjectPrompt projectPrompt')
+    , ("M-x c", spawn "google-chrome-stable")
     , ("M-x x", spawn "google-chrome-stable --incognito")
     , ("M-x v", spawn $ terminal' ++ " -e nvim")
     , ("M-x u", spawn "unityhub-scaled")
