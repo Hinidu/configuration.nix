@@ -2,6 +2,7 @@
 
 let
   colors = osConfig.solarized.colors;
+  kitten = "${config.programs.kitty.package}/bin/kitten";
 in
 # Relies on Xft.dpi from modules/xserver.nix for the HiDPI font size.
 {
@@ -48,4 +49,12 @@ in
       color15 = colors.base3;
     };
   };
+
+  # Ctrl+Shift+E (URL hints) and clicks on file:// image links (e.g. agents'
+  # screenshots) show the image over the current window; any key closes it.
+  xdg.configFile."kitty/open-actions.conf".text = ''
+    protocol file
+    mime image/*
+    action launch --type=overlay ${kitten} icat --hold -- ''${FILE_PATH}
+  '';
 }

@@ -43,6 +43,14 @@ Don't ask separately about rebase: if I ask you to push and the branch is
 behind, do `pull --rebase` yourself when there are no conflicts, and just tell
 me which commits you rebased onto. If there are conflicts, stop and ask.
 
+## Pointing me to files
+
+When you mention a file I'm meant to look at (screenshots, rendered images,
+generated reports), write it as an absolute `file://` URL, e.g.
+`file:///home/hinidu/.claude/jobs/<id>/tmp/dialog.png`: kitty opens those with
+Ctrl+Shift+E. Never write paths through variables like `$CLAUDE_JOB_DIR` or
+`~`, which I can't open from the message.
+
 ## Naming in code
 
 In any language and project, give variables, parameters (including lambda
