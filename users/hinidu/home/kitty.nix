@@ -3,6 +3,23 @@
 let
   colors = osConfig.solarized.colors;
   kitten = "${config.programs.kitty.package}/bin/kitten";
+
+  # Shows file:// image links with icat inside the overlay it runs in, and
+  # hands every other URL to xdg-open (the overlay then closes at once).
+  openUrl = pkgs.writeShellScript "kitty-open-url" ''
+    url="$1"
+    if [[ $url == file://* ]]; then
+      encodedPath=''${url#file://}
+      encodedPath=''${encodedPath#localhost}
+      printf -v path '%b' "''${encodedPath//%/\\x}"
+      case "''${path,,}" in
+        *.png | *.jpg | *.jpeg | *.gif | *.webp | *.bmp)
+          exec ${kitten} icat --hold -- "$path"
+          ;;
+      esac
+    fi
+    ${pkgs.util-linux}/bin/setsid -f ${pkgs.xdg-utils}/bin/xdg-open "$url" >/dev/null 2>&1
+  '';
 in
 # Relies on Xft.dpi from modules/xserver.nix for the HiDPI font size.
 {
@@ -48,10 +65,15 @@ in
       color14 = colors.base1;
       color15 = colors.base3;
     };
+
+    # The default URL hints skip open-actions.conf (they pass open_url_with
+    # explicitly), so images would go to the browser.
+    keybindings."ctrl+shift+e" =
+      "kitten hints --program \"launch --type=overlay ${openUrl}\"";
   };
 
-  # Ctrl+Shift+E (URL hints) and clicks on file:// image links (e.g. agents'
-  # screenshots) show the image over the current window; any key closes it.
+  # Clicks on file:// image links (e.g. agents' screenshots) show the image
+  # over the current window; any key closes it.
   xdg.configFile."kitty/open-actions.conf".text = ''
     protocol file
     mime image/*
