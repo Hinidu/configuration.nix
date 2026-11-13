@@ -75,13 +75,16 @@ let
       ${jqColorArgs}
   '';
 
+  # Which xmonad workspace a session's window goes to, by its directory
+  projects = pkgs.writeText "agents-projects.json" (builtins.toJSON osConfig.desktop.projects);
+
   # M-s <number> in xmonad: the window of the session with that number, or a
-  # new one
+  # new one (on the workspace of the session's project)
   focusWindow = pkgs.writeShellApplication {
     name = "agents-focus-window";
     # kitty and claude come from the system PATH
     runtimeInputs = [ readStates ] ++ (with pkgs; [ xdotool libnotify util-linux ]);
-    text = "filters=${filters}\n" + builtins.readFile ./agents/focus-window.sh;
+    text = "filters=${filters}\nprojects=${projects}\n" + builtins.readFile ./agents/focus-window.sh;
   };
 
   panelConfig = "${config.xdg.configHome}/conky/agents-panel.conf";

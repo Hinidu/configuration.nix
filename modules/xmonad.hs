@@ -14,6 +14,7 @@ import XMonad.Prompt
 import XMonad.Util.EZConfig (additionalKeys, additionalKeysP)
 import XMonad.Util.Run (runProcessWithInput)
 import qualified XMonad.StackSet as W
+import Data.List (isPrefixOf)
 import Data.Maybe (isJust)
 import Text.Read (readMaybe)
 
@@ -111,6 +112,11 @@ manageHook' = composeAll
     [ className =? "slack"                --> doShift "im"
     , className =? "google-chrome-stable" --> doShift "web"
     , className =? "Unity"                --> doShift "work"
+    -- A window whose instance name is "workspace-<name>" goes to that
+    -- workspace: agents-focus-window opens a session's kitty with the name of
+    -- the session's project (kitty --name)
+    , fmap (workspacePrefix `isPrefixOf`) appName
+                                          --> (appName >>= doShift . drop (length workspacePrefix))
     , className =? "Gxmessage"            --> doFloat
     , className =? "Kodi"                 --> doFloat
     , className =? "mpv"                  --> doFloat
@@ -118,6 +124,8 @@ manageHook' = composeAll
     , title =? "Starting Unity..."        --> doFloat
     , title =? "Hold on..."               --> doFloat
     ]
+
+workspacePrefix = "workspace-"
 
 -- scrot doesn't create the target directory itself. The delay lets the key be
 -- released first, otherwise scrot can't grab the pointer to select an area.
@@ -157,12 +165,17 @@ keys' =
 
 -- Jump to the window of the Claude Code session with this number on the agents
 -- panel and bar, like M-u does for the urgent one. agents-focus-window finds
--- it by title and tells about a session that isn't open anywhere itself.
+-- it by title and prints "window <id>"; a session that isn't open anywhere it
+-- opens in a new kitty, and if the session belongs to a project, prints
+-- "workspace <name>" to go there (the manageHook puts the window on it). It
+-- tells about a missing session itself and prints nothing then.
 focusAgent number = do
     output <- runProcessWithInput "agents-focus-window" [show number] ""
-    case readMaybe output of
-        Just window -> windows (W.focusWindow window)
-        Nothing -> return ()
+    case words output of
+        [] -> return ()
+        ["window", windowId] | Just window <- readMaybe windowId -> windows (W.focusWindow window)
+        ["workspace", name] | name `elem` workspaces' -> windows (W.view name)
+        _ -> error ("agents-focus-window printed something unexpected: " ++ show output)
 
 keysP' =
     [ ("M-s " ++ show number, focusAgent number) | number <- [1 .. 9 :: Int] ] ++
