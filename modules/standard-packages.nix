@@ -50,6 +50,7 @@
     openssl
     p7zip
     pamixer
+    pandoc
     (callPackage ../packages/perfetto.nix { })
     pinentry-curses
     poppler-utils
