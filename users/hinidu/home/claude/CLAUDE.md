@@ -45,11 +45,16 @@ me which commits you rebased onto. If there are conflicts, stop and ask.
 
 ## Pointing me to files
 
-When you mention a file I'm meant to look at (screenshots, rendered images,
-generated reports), write it as an absolute `file://` URL, e.g.
+When you mention an image, a sound or a PDF I'm meant to look at or listen
+to (screenshots, rendered images, recordings, generated PDFs), write it as an
+absolute `file://` URL, e.g.
 `file:///home/hinidu/.claude/jobs/<id>/tmp/dialog.png`: kitty opens those with
-Ctrl+Shift+E. Never write paths through variables like `$CLAUDE_JOB_DIR` or
-`~`, which I can't open from the message.
+Ctrl+Shift+E. Never write such paths through variables like `$CLAUDE_JOB_DIR`
+or `~`, which I can't open from the message.
+
+This is only for images, sounds and PDFs. Mention all other files (code,
+configs, reports, logs) the usual way, as short repo-relative paths or
+`file_path:line_number`, not as `file://` URLs.
 
 ## Naming in code
 
