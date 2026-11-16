@@ -5,7 +5,6 @@ import XMonad.Actions.DynamicProjects
 import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers (doFullFloat, isFullscreen)
-import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
 import XMonad.Hooks.UrgencyHook
@@ -109,13 +108,9 @@ layoutHook' = smartBorders $ avoidStruts
     $ onWorkspaces ["im", "web"] (Full ||| Grid)
     $ Grid ||| Full ||| layoutHook def
 
--- Java GUI apps (JetBrains IDEs and the like) draw grey windows in
--- non-reparenting window managers unless they think they run in LG3D
-startupHook' = do
-    setWMName "LG3D"
-    -- Claude Code sessions side panel (conky); doesn't start a second copy
-    -- on restart
-    spawn "agents-panel start"
+-- Claude Code sessions side panel (conky); doesn't start a second copy on
+-- restart
+startupHook' = spawn "agents-panel start"
 
 manageHook' = composeAll
     [ className =? "slack"                --> doShift "im"
