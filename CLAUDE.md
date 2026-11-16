@@ -24,6 +24,9 @@ nixos-rebuild dry-build
 
 Formatter: `nixpkgs-fmt` (language server: `nil`).
 
+A new machine is installed with `install.sh <host>` from the NixOS installer; its header lists what
+to prepare first.
+
 ## Structure
 
 - `flake.nix` lists the hosts in `nixosConfigurations`, each built from `computers/<host>/`; the
