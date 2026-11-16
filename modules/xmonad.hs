@@ -2,7 +2,9 @@
 
 import XMonad
 import XMonad.Actions.DynamicProjects
+import XMonad.Hooks.EwmhDesktops
 import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers (doFullFloat, isFullscreen)
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP
@@ -26,6 +28,13 @@ main = getDirectories >>= launch myConfig
 
 myConfig = withSB (xmobar' <> xmobarAgents)
     . withUrgencyHookC NoUrgencyHook urgentConfig
+    -- Windows that ask for fullscreen get it (Telegram's media viewer
+    -- otherwise fights the tiling layout over its size and shakes). An app's
+    -- request to activate its window only marks it urgent instead of
+    -- switching workspaces behind my back.
+    . ewmhFullscreen
+    . setEwmhActivateHook doAskUrgent
+    . ewmh
     . docks
     . dynamicProjects projects'
     $ def
@@ -117,6 +126,9 @@ manageHook' = composeAll
     -- the session's project (kitty --name)
     , fmap (workspacePrefix `isPrefixOf`) appName
                                           --> (appName >>= doShift . drop (length workspacePrefix))
+    -- ewmhFullscreen only handles requests from windows already on screen;
+    -- this covers windows mapped fullscreen, like Telegram's media viewer
+    , isFullscreen                        --> doFullFloat
     , className =? "Gxmessage"            --> doFloat
     , className =? "Kodi"                 --> doFloat
     , className =? "mpv"                  --> doFloat
