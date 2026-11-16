@@ -14,17 +14,13 @@
   };
   boot.loader.systemd-boot.configurationLimit = 10;
 
-  # nixpkgs and home-manager come from local git checkouts instead of channels;
-  # home-manager must be on the release branch matching the nixpkgs tag
+  # nixpkgs and home-manager are inputs of flake.nix instead of channels; NixOS
+  # points NIX_PATH (<nixpkgs>, nix-shell -p) at the same nixpkgs by itself
   nix.channel.enable = false;
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
   # Otherwise every nix-env call (Home Manager activation runs one) recreates
   # ~/.nix-defexpr/channels, and activation warns that channels are disabled
   nix.settings.use-xdg-base-directories = true;
-  nix.nixPath = [
-    "nixpkgs=/home/hinidu/sources/nixpkgs"
-    "home-manager=/home/hinidu/sources/home-manager"
-    "nixos-config=/etc/nixos/configuration.nix"
-  ];
 
   time.timeZone = "Europe/Kaliningrad";
 

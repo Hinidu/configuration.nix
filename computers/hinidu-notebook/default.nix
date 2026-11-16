@@ -2,17 +2,24 @@
 
 {
   imports =
-    [ ../modules/display.nix
-      ../modules/env.nix
-      ../modules/i18n.nix
-      ../modules/misc.nix
-      ../modules/openvpn-client.nix
-      ../modules/projects.nix
-      ../modules/solarized.nix
-      ../modules/standard-packages.nix
-      ../modules/xserver.nix
-      ../users/hinidu
+    [ ./hardware-configuration.nix
+      ../../modules/display.nix
+      ../../modules/env.nix
+      ../../modules/i18n.nix
+      ../../modules/misc.nix
+      ../../modules/openvpn-client.nix
+      ../../modules/projects.nix
+      ../../modules/solarized.nix
+      ../../modules/standard-packages.nix
+      ../../modules/xserver.nix
+      ../../users/hinidu
     ];
+
+  # Older generated hardware configurations don't set it
+  nixpkgs.hostPlatform = "x86_64-linux";
+
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 
   #fileSystems."/".options = ["defaults" "noatime" "discard" "inline_xattr"];
   #fileSystems."/boot".options = ["defaults" "noatime" "discard"];
@@ -46,7 +53,10 @@
     }
   ];
 
-  networking.hostName = "hinidu_notebook";
+  # Also the name of this host in flake.nix: nixos-rebuild picks it by hostname
+  networking.hostName = "hinidu-notebook";
+  networking.useDHCP = false;
+  networking.interfaces.wlo1.useDHCP = true;
   networking.wireless = {
     enable = true;
 
@@ -82,4 +92,7 @@
   };
 
   boot.supportedFilesystems = ["exfat"];
+
+  # The release this machine was installed with; never change it on an upgrade
+  system.stateVersion = "21.11";
 }

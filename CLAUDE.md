@@ -2,49 +2,49 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-Personal NixOS system configuration (no flakes, channels disabled). nixpkgs comes from a local git
-checkout at `/home/hinidu/sources/nixpkgs` (a release tag, detached HEAD), wired in via `nix.nixPath`
-in `modules/misc.nix`; upgrading NixOS means checking out a newer tag there. Packages are installed
-declaratively only, not via `nix-env`.
+Personal NixOS system configuration as a flake (channels disabled). nixpkgs (`nixos-26.05`) and
+home-manager (`release-26.05`, must match) are inputs of `flake.nix`, pinned in `flake.lock`:
+`nix flake update` moves them to the branches' latest commits, upgrading NixOS means changing both
+branch names. Packages are installed declaratively only, not via `nix-env`.
 
 ## Checking changes
 
-The user applies the config themselves (`sudo nixos-rebuild switch`), so don't run it. To verify that
-the config evaluates and see what would be built:
+The user applies the config themselves (`sudo nixos-rebuild switch`, which picks
+`nixosConfigurations.<hostname>` from `/etc/nixos/flake.nix`), so don't run it. To verify that the
+config evaluates and see what would be built:
 
 ```sh
 nixos-rebuild dry-build
 ```
 
 - It must run outside the Bash sandbox (the sandbox hides parts of `/nix/var/nix/profiles`).
-- If it fails with `file 'home-manager/nixos' was not found`, the shell's `NIX_PATH` lacks the
-  `home-manager` entry; run it with the full path from `modules/misc.nix`:
-  `NIX_PATH="nixpkgs=/home/hinidu/sources/nixpkgs:home-manager=/home/hinidu/sources/home-manager:nixos-config=/etc/nixos/configuration.nix" nixos-rebuild dry-build`
+- A flake sees only files known to git: `git add -N` every new file, or evaluation says it doesn't
+  exist.
 - Treat new evaluation warnings (renamed/obsolete options) as something to report.
 
 Formatter: `nixpkgs-fmt` (language server: `nil`).
 
 ## Structure
 
-- `configuration.nix` and `hardware-configuration.nix` are **gitignored** and machine-local.
-  `configuration.nix` only holds boot loader, network interface and `stateVersion` settings, and
-  imports exactly one file from `computers/`.
-- `computers/<host>.nix` is the per-host entry point: it picks the set of `modules/` and `users/`
-  to import and holds host-only settings (hostname, Wi-Fi networks, xrandr heads, and the screen:
-  `display.dpi`/`display.height` from `modules/display.nix`, which every desktop size is derived from).
-  The active host is `hinidu-notebook`.
+- `flake.nix` lists the hosts in `nixosConfigurations`, each built from `computers/<host>/`; the
+  attribute name must equal the host's `networking.hostName`.
+- `computers/<host>/default.nix` is the per-host entry point: it picks the set of `modules/` and
+  `users/` to import and holds host-only settings (hostname, boot loader, network interfaces,
+  `stateVersion`, Wi-Fi networks, and the screen: `display.dpi`/`display.height` from
+  `modules/display.nix`, which every desktop size is derived from). Next to it is the host's
+  generated `hardware-configuration.nix`. The active host is `hinidu-notebook`.
 - `modules/` contains shared feature modules; most changes go to `modules/standard-packages.nix`
   (system packages, `programs.*`, nix-ld libraries). `environment.systemPackages` is kept in
   alphabetical order; insert new packages at their sorted position.
 - `users/hinidu/default.nix` defines the single user; `users/hinidu/home/` is that user's
-  Home Manager config (dotfiles). home-manager comes from a local checkout at
-  `/home/hinidu/sources/home-manager` (release branch matching the nixpkgs tag), wired in via
-  `nix.nixPath` like nixpkgs.
+  Home Manager config (dotfiles); its NixOS module comes from the flake input via `specialArgs.inputs`.
 
-Known stale bits: `computers/hinidu-pc.nix` and `computers/virtualbox-guest-dev.nix` aren't used
-now; the latter imports `modules/boot.nix`, which no longer exists.
+Known stale bits: `computers/hinidu-pc.nix` and `computers/virtualbox-guest-dev.nix` aren't in the
+flake and wouldn't evaluate (the latter imports `modules/boot.nix`, which no longer exists).
 
 ## Secrets
 
 `wifi-secrets.env` (gitignored, readable only by `root`/`wpa_supplicant`) contains Wi-Fi PSKs
-referenced as `ext:psk_*` in `computers/hinidu-notebook.nix`. Don't read it or commit secrets.
+referenced as `ext:psk_*` in `computers/hinidu-notebook/default.nix`. Don't read it or commit
+secrets: everything under git is copied into the world-readable Nix store on evaluation. Secrets
+are referenced as runtime paths (strings), never as Nix paths.
