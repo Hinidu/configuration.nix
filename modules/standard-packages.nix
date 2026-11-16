@@ -32,7 +32,9 @@
     ffmpeg
     file
     fish
-    ghc
+    # Libraries importable from ghc/ghci. Don't add xmonad here: its vanilla
+    # binary would shadow the configured one in PATH.
+    (haskellPackages.ghcWithPackages (hsPkgs: [ hsPkgs.random ]))
     git
     gnumake
     htop
