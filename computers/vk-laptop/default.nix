@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 
-# The work ThinkPad T14 Gen4 (Intel). Installed with `install.sh vk-notebook`,
+# The work ThinkPad T14 Gen4 (Intel). Installed with `install.sh vk-laptop`,
 # which generates hardware-configuration.nix next to this file.
 {
   imports =
@@ -56,7 +56,7 @@
   # Also the name of this host in flake.nix: nixos-rebuild picks it by hostname.
   # The interface is left to the generated hardware-configuration.nix (DHCP on
   # all of them).
-  networking.hostName = "vk-notebook";
+  networking.hostName = "vk-laptop";
   networking.wireless = {
     enable = true;
 

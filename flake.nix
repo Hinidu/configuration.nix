@@ -35,7 +35,7 @@
     {
       nixosConfigurations = {
         hinidu-notebook = host "hinidu-notebook";
-        vk-notebook = host "vk-notebook";
+        vk-laptop = host "vk-laptop";
       };
     };
 }
