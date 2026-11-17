@@ -9,6 +9,7 @@
       ../../modules/misc.nix
       ../../modules/openvpn-client.nix
       ../../modules/projects.nix
+      ../../modules/secure-boot.nix
       ../../modules/solarized.nix
       ../../modules/standard-packages.nix
       ../../modules/xserver.nix
@@ -18,7 +19,7 @@
   # Older generated hardware configurations don't set it
   nixpkgs.hostPlatform = "x86_64-linux";
 
-  boot.loader.systemd-boot.enable = true;
+  # The boot loader is lanzaboote from modules/secure-boot.nix
   boot.loader.efi.canTouchEfiVariables = true;
 
   #fileSystems."/".options = ["defaults" "noatime" "discard" "inline_xattr"];

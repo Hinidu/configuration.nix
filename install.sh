@@ -5,8 +5,11 @@
 # Before running it:
 # - write computers/<host>/default.nix: importing ./hardware-configuration.nix
 #   and modules/encrypted-disk.nix with `encryptedDisk.device` set (see
-#   `lsblk`), boot loader, system.stateVersion, networking.hostName = "<host>"
-#   and the rest; add the host to nixosConfigurations in flake.nix, and push;
+#   `lsblk`), modules/secure-boot.nix, system.stateVersion,
+#   networking.hostName = "<host>" and the rest; add the host to
+#   nixosConfigurations in flake.nix, and push;
+# - disable Secure Boot in the firmware setup: the installer isn't signed by
+#   keys the firmware knows;
 # - connect to the network.
 #
 # The script generates computers/<host>/hardware-configuration.nix, then
@@ -67,4 +70,6 @@ cp -a "$clone" "$config_dir"
 # Like on the other machines: edited as the user, applied with sudo
 chown -R "$user_uid:root" "$config_dir"
 
-echo "Installed. After booting into it, commit and push computers/$host/hardware-configuration.nix."
+echo "Installed. Boot into it, then put the firmware into Setup Mode with Secure Boot disabled,"
+echo "boot once more, and only then enable Secure Boot: see the steps in modules/secure-boot.nix."
+echo "Then commit and push computers/$host/hardware-configuration.nix."

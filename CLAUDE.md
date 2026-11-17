@@ -39,6 +39,8 @@ to prepare first.
 - New hosts describe their disk with `modules/encrypted-disk.nix` (disko: LUKS2 + btrfs), which
   also provides their `fileSystems`, so their `hardware-configuration.nix` is generated with
   `--no-filesystems`. `hinidu-notebook` predates it and keeps its unencrypted XFS.
+- `modules/secure-boot.nix` replaces systemd-boot with lanzaboote (Secure Boot with own keys,
+  generated and enrolled on first boots); its header describes the manual firmware steps.
 - `modules/` contains shared feature modules; most changes go to `modules/standard-packages.nix`
   (system packages, `programs.*`, nix-ld libraries). `environment.systemPackages` is kept in
   alphabetical order; insert new packages at their sorted position.
