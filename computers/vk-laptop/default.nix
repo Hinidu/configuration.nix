@@ -33,8 +33,8 @@
   # 14" 1920x1200 (about 161 real dpi); with the 2.8K OLED panel (2880x1800,
   # about 243 real dpi) use dpi = 168 and height = 1800 instead
   display = {
-    dpi = 120;
-    height = 1200;
+    dpi = 168;
+    height = 1800;
   };
 
   # xmonad workspaces, M-1… in this order (modules/projects.nix)
