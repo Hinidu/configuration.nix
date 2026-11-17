@@ -97,7 +97,10 @@ git -C "$clone" add "computers/$host/hardware-configuration.nix"
 echo "Partitioning the disk as computers/$host describes it..."
 "${nix[@]}" run "$system.config.system.build.destroyFormatMount"
 
-nixos-install --flake "$clone#$host"
+# No password for root: its account stays locked, the user administers the
+# system with sudo (the emergency mode of systemd, which asks for it, can be
+# replaced by booting an older generation or this installer)
+nixos-install --no-root-passwd --flake "$clone#$host"
 
 # The configuration sets no password, and without one the user can't log in
 echo "Password for hinidu:"
