@@ -36,6 +36,9 @@ to prepare first.
   `stateVersion`, Wi-Fi networks, and the screen: `display.dpi`/`display.height` from
   `modules/display.nix`, which every desktop size is derived from). Next to it is the host's
   generated `hardware-configuration.nix`. The active host is `hinidu-notebook`.
+- New hosts describe their disk with `modules/encrypted-disk.nix` (disko: LUKS2 + btrfs), which
+  also provides their `fileSystems`, so their `hardware-configuration.nix` is generated with
+  `--no-filesystems`. `hinidu-notebook` predates it and keeps its unencrypted XFS.
 - `modules/` contains shared feature modules; most changes go to `modules/standard-packages.nix`
   (system packages, `programs.*`, nix-ld libraries). `environment.systemPackages` is kept in
   alphabetical order; insert new packages at their sorted position.
