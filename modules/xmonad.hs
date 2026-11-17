@@ -86,8 +86,10 @@ projectPrompt' = def
     }
 
 -- xmobar reads its config from ~/.config/xmobar/xmobarrc (Home Manager) and
--- gets workspaces from the _XMONAD_LOG property (the XMonadLog plugin)
-xmobar' = statusBarProp "xmobar" (pure xmobarPP')
+-- gets workspaces from the _XMONAD_LOG property (the XMonadLog plugin). It's
+-- started once PipeWire is up, or its volume widget is stuck at N/A
+-- (modules/xserver.nix)
+xmobar' = statusBarProp "@xmobarAfterAudio@" (pure xmobarPP')
 
 -- Second line below the main bar: Claude Code background sessions. It gets
 -- nothing from xmonad, so it only needs to be started and stopped with it

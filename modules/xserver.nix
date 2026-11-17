@@ -14,6 +14,19 @@ let
       + ", projectDirectory = ${builtins.toJSON workspace.directory}"
       + ", projectStartHook = Nothing }")
     config.desktop.projects + "\n    ]";
+
+  # xmonad starts at login before the user's systemd has even created the
+  # PipeWire socket, and xmobar's volume widget gives up on the "default"
+  # mixer for good if it can't open it on start (shows N/A until restart).
+  # So the main bar waits for the default audio output, but not forever: a
+  # bar without volume is better than no bar.
+  xmobarAfterAudio = pkgs.writeShellScript "xmobar-after-audio" ''
+    for attempt in $(seq 50); do
+      ${config.services.pipewire.wireplumber.package}/bin/wpctl inspect @DEFAULT_AUDIO_SINK@ >/dev/null 2>&1 && break
+      sleep 0.2
+    done
+    exec xmobar "$@"
+  '';
 in
 {
   # Move somewhere
@@ -104,7 +117,7 @@ in
       enable = true;
       enableContribAndExtras = true;
       config = builtins.replaceStrings
-        [ "@underlineWidth@" "@projects@" "@promptFont@" "@promptHeight@" "@background@" "@backgroundHighlight@" "@emphasis@" "@green@" ]
+        [ "@underlineWidth@" "@projects@" "@promptFont@" "@promptHeight@" "@background@" "@backgroundHighlight@" "@emphasis@" "@green@" "@xmobarAfterAudio@" ]
         [
           (toString bars.underlineWidth)
           haskellProjects
@@ -114,6 +127,7 @@ in
           colors.backgroundHighlight
           colors.emphasis
           colors.green
+          "${xmobarAfterAudio}"
         ]
         (builtins.readFile ./xmonad.hs);
     };
