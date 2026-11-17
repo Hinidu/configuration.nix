@@ -9,6 +9,7 @@
       ../../modules/misc.nix
       ../../modules/openvpn-client.nix
       ../../modules/projects.nix
+      ../../modules/screen-lock.nix
       ../../modules/secure-boot.nix
       ../../modules/solarized.nix
       ../../modules/standard-packages.nix
