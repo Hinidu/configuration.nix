@@ -62,7 +62,7 @@
 
     userControlled = true;
 
-    # Not in git: install.sh --wifi-secrets puts it here, readable by root only.
+    # Not in git: install.sh --wifi-secrets puts it here, owned by root:wpa_supplicant, mode 640.
     # Every ext:psk_* below is a `psk_*=<passphrase>` line in it.
     secretsFile = "/etc/nixos/wifi-secrets.env";
 

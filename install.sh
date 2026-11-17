@@ -24,7 +24,7 @@
 #                          stays in the copy of the repository on the new machine
 #   --wifi-secrets <file>  copy this file (e.g. from the installer's USB stick)
 #                          to /etc/nixos/wifi-secrets.env of the new machine,
-#                          readable by root only
+#                          readable by root and the wpa_supplicant group
 #
 # Usage: install.sh [--disk <device>] [--wifi-secrets <file>] <host>
 set -euo pipefail
@@ -112,12 +112,15 @@ cp -a "$clone" "$config_dir"
 chown -R "$user_uid:root" "$config_dir"
 
 if [[ -n $wifi_secrets ]]; then
-    install -m 600 -o root -g root "$wifi_secrets" "$config_dir/wifi-secrets.env"
+    install -m 640 -o root -g root "$wifi_secrets" "$config_dir/wifi-secrets.env"
+    # The group exists only in the new system, so it is resolved inside it
+    nixos-enter --root "$target" -c 'chgrp wpa_supplicant /etc/nixos/wifi-secrets.env'
 fi
 
 echo "Installed. Boot into it, then put the firmware into Setup Mode with Secure Boot disabled,"
 echo "boot once more, and only then enable Secure Boot: see the steps in modules/secure-boot.nix."
 echo "Then commit and push computers/$host/hardware-configuration.nix (and default.nix if --disk changed it)."
 if [[ -z $wifi_secrets ]]; then
-    echo "No --wifi-secrets: put wifi-secrets.env into /etc/nixos (root only) or wpa_supplicant won't start."
+    echo "No --wifi-secrets: put wifi-secrets.env into /etc/nixos (root:wpa_supplicant, mode 640) or wpa_supplicant won't start."
+    echo "  sudo chgrp wpa_supplicant /etc/nixos/wifi-secrets.env && sudo chmod 640 /etc/nixos/wifi-secrets.env"
 fi
