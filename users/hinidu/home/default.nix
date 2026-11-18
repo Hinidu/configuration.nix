@@ -13,6 +13,7 @@
     ./ssh.nix
     ./terraform.nix
     ./vifm.nix
+    ./wallpapers.nix
     ./xmobar.nix
     ./zed.nix
   ];

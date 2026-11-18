@@ -196,4 +196,12 @@ keysP' =
     , ("M-x u", spawn "unityhub-scaled")
     , ("M-x s", spawn "slack")
     , ("M-x p", spawn "zathura")
+    ] ++
+    -- Wallpapers from Wallhaven (users/hinidu/home/wallpapers.nix): like keeps
+    -- the shown one, dislike replaces it. + is shifted = on the main keyboard,
+    -- so either one with or without Shift, and the keypad's too
+    [ ("M-b " ++ key, spawn ("wallpaper " ++ verdict))
+    | (verdict, keyNames) <- [ ("like", ["=", "+", "S-=", "S-+", "<KP_Add>"])
+                             , ("dislike", ["-", "S--", "<KP_Subtract>"]) ]
+    , key <- keyNames
     ]

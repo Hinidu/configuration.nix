@@ -91,18 +91,47 @@ let
 
   # Started by xmonad, toggled with M-a. conky reserves the space itself
   # (a panel window with struts), so xmonad moves the windows aside on every
-  # workspace while it runs.
+  # workspace while it runs. The wallpaper fills only what the bars and the
+  # panel leave visible (wallpapers.nix), so it is fitted again once the panel's
+  # window has come or gone: conky takes a moment for either.
   agentsPanel = pkgs.writeShellApplication {
     name = "agents-panel";
-    runtimeInputs = with pkgs; [ conky procps ];
+    # wallpaper comes from PATH (wallpapers.nix)
+    runtimeInputs = with pkgs; [ conky procps xdotool xprop ];
     text = ''
       panel_command="conky -c ${panelConfig}"
       is_running() { pgrep -u "$(id -u)" -f "$panel_command" > /dev/null; }
-      start() { $panel_command --daemonize > /dev/null; }
+
+      # hidden, shown (with the space reserved), or mapping: conky reserves
+      # the space a moment after its window appears
+      panel_state() {
+        local window
+        # Both fail when there's no window (any more): it's hidden then
+        window=$(xdotool search --onlyvisible --name '^agents-panel$' | head -n 1 || true)
+        if [[ -z $window ]]; then
+          echo hidden
+        elif [[ $(xprop -id "$window" _NET_WM_STRUT_PARTIAL 2>/dev/null || true) == *=* ]]; then
+          echo shown
+        else
+          echo mapping
+        fi
+      }
+
+      # Waits up to 3 s for the panel to be shown or hidden
+      refit_wallpaper() {
+        local expected="$1"
+        for _ in $(seq 30); do
+          [[ $(panel_state) == "$expected" ]] && break
+          sleep 0.1
+        done
+        wallpaper refresh
+      }
+      start() { $panel_command --daemonize > /dev/null; refit_wallpaper shown; }
+      stop() { pkill -u "$(id -u)" -f "$panel_command"; refit_wallpaper hidden; }
 
       case "''${1:-}" in
         start) is_running || start ;;
-        toggle) if is_running; then pkill -u "$(id -u)" -f "$panel_command"; else start; fi ;;
+        toggle) if is_running; then stop; else start; fi ;;
         *) echo "usage: agents-panel start|toggle" >&2; exit 1 ;;
       esac
     '';
