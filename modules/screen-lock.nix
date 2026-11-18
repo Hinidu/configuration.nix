@@ -30,7 +30,7 @@ in
   services.displayManager.ly = {
     enable = true;
     settings = {
-      animation = "gameoflife";
+      animation = "colormix";
       bigclock = "en";
       clear_password = true;
     };
