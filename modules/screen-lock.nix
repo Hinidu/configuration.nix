@@ -17,6 +17,36 @@ let
   consoleFontSize = lib.last
     (lib.filter (size: size <= config.display.pixels 12) consoleFontSizes);
 
+  # ly's console font: the same Terminus, but the variant with the half blocks
+  # and the darkest shade the Dune scene is drawn with (the console's own
+  # 512-glyph variant has neither)
+  lyFont = "${pkgs.terminus_font}/share/consolefonts/ter-u${toString consoleFontSize}n.psf.gz";
+
+  # The Dune scene of ly's login screen, in cells of the console font
+  # (half as wide as high). Wide enough for 16:9: ly centers it and cuts off
+  # what doesn't fit
+  dune = pkgs.runCommand "ly-dune"
+    { nativeBuildInputs = [ (pkgs.python3.withPackages (python: [ python.numpy ])) ]; } ''
+    mkdir $out
+    python3 ${./ly-dune.py} --font ${lyFont} --out $out \
+      --lines ${toString (config.display.height / consoleFontSize)} \
+      --columns ${toString (config.display.height * 32 / (9 * consoleFontSize))}
+  '';
+
+  # Runs before ly takes over its console: the console turns ly's colors into
+  # its 16-color palette, so it gets the scene's palette instead of the
+  # default one
+  lyStart = pkgs.writeShellScript "ly-start" ''
+    ${pkgs.kbd}/bin/setfont ${lyFont}
+    slot=0
+    while read -r color; do
+      printf '\033]P%X%s' "$slot" "$color"
+      slot=$((slot + 1))
+    done < ${dune}/palette
+    # The old colors linger in the cells until they are redrawn
+    printf '\033[2J'
+  '';
+
   locker = pkgs.writeShellScript "lock-screen" ''
     export XSECURELOCK_FONT="Source Code Pro:size=14"
     export XSECURELOCK_AUTH_BACKGROUND_COLOR="${colors.background}"
@@ -30,7 +60,12 @@ in
   services.displayManager.ly = {
     enable = true;
     settings = {
-      animation = "doom";
+      # A config without this key is taken for one older than true color, and
+      # ly quietly falls back to eight colors, refusing the 256-color scene
+      full_color = true;
+      animation = "dur_file";
+      dur_file_path = "${dune}/dune.dur";
+      start_cmd = "${lyStart}";
       bigclock = "en";
       clear_password = true;
     };
