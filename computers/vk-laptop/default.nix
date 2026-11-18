@@ -29,6 +29,11 @@
   # checking `lsblk` in the installer
   encryptedDisk.device = "/dev/nvme0n1";
 
+  # The Goodix 27c6:6594 fingerprint reader (goodixmoc driver of libfprint).
+  # fprintd also turns on fprintAuth for every PAM service (login, ly, sudo,
+  # the screen locker); a finger is enrolled with `fprintd-enroll`.
+  services.fprintd.enable = true;
+
   solarized.variant = "dark";
 
   # 14" 1920x1200 (about 161 real dpi); with the 2.8K OLED panel (2880x1800,
