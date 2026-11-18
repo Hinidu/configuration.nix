@@ -8,8 +8,6 @@
 # password prompt crashes.
 let
   idleMinutes = 10;
-  # xss-lock dims the screen this long before locking it; any input cancels
-  dimSeconds = 10;
 
   colors = config.solarized.colors;
 
@@ -46,17 +44,23 @@ in
     font = "ter-v${toString consoleFontSize}n";
   };
 
-  # X's screen saver timer is what xss-lock waits for: it fires after the
-  # first number of seconds and locks after the second
+  # X's screen saver timer is what xss-lock waits for
   services.xserver.displayManager.sessionCommands = ''
-    ${pkgs.xset}/bin/xset s ${toString (idleMinutes * 60 - dimSeconds)} ${toString dimSeconds}
+    ${pkgs.xset}/bin/xset s ${toString (idleMinutes * 60)}
   '';
+
+  # logind asks polkit whether a process may hold off suspend, and without it
+  # refuses everyone: then xss-lock locks only after waking up, showing the
+  # desktop for a few seconds
+  security.polkit.enable = true;
 
   programs.xss-lock = {
     enable = true;
     lockerCommand = "${locker}";
+    # No --notifier (xsecurelock's dimmer): with one, xss-lock locks only on
+    # the screen saver's next "cycle" event, and X doesn't send it once it has
+    # blanked the screen, so it dimmed and never locked
     extraOptions = [
-      "--notifier=${pkgs.xsecurelock}/libexec/xsecurelock/dimmer"
       # Suspend waits until the screen is locked, so it's never shown unlocked
       # on wake up
       "--transfer-sleep-lock"
