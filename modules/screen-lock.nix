@@ -4,8 +4,8 @@
 # console before X starts; in the session xss-lock runs xsecurelock after
 # `idleMinutes` without input (the most VK's NAC allows is 10) and before the
 # laptop suspends, e.g. when its lid is closed. xsecurelock asks for the same
-# password and, unlike i3lock and others, keeps the screen locked even if its
-# password prompt crashes.
+# password over the current desktop wallpaper and, unlike i3lock and others,
+# keeps the screen locked even if its password prompt crashes.
 let
   idleMinutes = 10;
 
@@ -47,7 +47,28 @@ let
     printf '\033[2J'
   '';
 
+  # Shows the current desktop wallpaper (users/hinidu/home/wallpapers.nix)
+  # under the password prompt, run by xsecurelock in each monitor's window.
+  # The original image, not the rendered screen.jpg: that one leaves bands for
+  # xmobar and the panels, which the lock screen doesn't have. panscan fills
+  # the window, cropping what sticks out
+  saver = pkgs.writeShellScript "lock-screen-saver" ''
+    wallpaper=$(${pkgs.coreutils}/bin/readlink --canonicalize-existing \
+      "''${XDG_CACHE_HOME:-$HOME/.cache}/wallpapers/current")
+    if [ -z "$wallpaper" ]; then
+      # No wallpaper picked yet, e.g. right after installation
+      exec ${pkgs.xsecurelock}/libexec/xsecurelock/saver_blank
+    fi
+    exec ${pkgs.mpv}/bin/mpv --no-config --really-quiet \
+      --wid="$XSCREENSAVER_WINDOW" --panscan=1.0 \
+      --image-display-duration=inf --no-audio --osc=no --osd-level=0 \
+      --no-input-default-bindings --input-vo-keyboard=no --input-cursor=no \
+      --cursor-autohide=always \
+      "$wallpaper"
+  '';
+
   locker = pkgs.writeShellScript "lock-screen" ''
+    export XSECURELOCK_SAVER=${saver}
     export XSECURELOCK_FONT="Source Code Pro:size=14"
     export XSECURELOCK_AUTH_BACKGROUND_COLOR="${colors.background}"
     export XSECURELOCK_AUTH_FOREGROUND_COLOR="${colors.body}"
