@@ -57,6 +57,10 @@
     extraStopCommands = "ip46tables -P INPUT ACCEPT";
   };
 
+  environment.systemPackages = [
+    (pkgs.callPackage ../../packages/vkworkspace.nix { })
+  ];
+
   solarized.variant = "dark";
 
   # 14" 1920x1200 (about 161 real dpi); with the 2.8K OLED panel (2880x1800,
