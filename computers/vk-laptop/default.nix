@@ -35,6 +35,15 @@
   # the screen locker); a finger is enrolled with `fprintd-enroll`.
   services.fprintd.enable = true;
 
+  # NAC requires /etc/shadow to be 0600 or stricter, but the users activation
+  # step (update-users-groups.pl) rewrites it as 0640 root:shadow on every
+  # switch and boot. Nothing reads it via the shadow group: unix_chkpwd, passwd,
+  # su and sudo are setuid root wrappers.
+  system.activationScripts.shadowPermissions = {
+    deps = [ "users" ];
+    text = "chmod 0600 /etc/shadow";
+  };
+
   solarized.variant = "dark";
 
   # 14" 1920x1200 (about 161 real dpi); with the 2.8K OLED panel (2880x1800,
