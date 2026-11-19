@@ -50,7 +50,16 @@ in
       twoFingerScroll = true;
     };
 
+    # NixOS starts graphical-session.target (through its fake target for
+    # sessions like xmonad) after these commands, but nothing stops it when
+    # X exits. After logging out and in without a reboot it's still active, so
+    # that start does nothing: the session's services (xss-lock, wallpaper)
+    # stay with the dead X, and xss-lock, failing to connect to it, gives up
+    # for good. Stopping the stale target first makes the start bring them up
+    # again with the new DISPLAY
     displayManager.sessionCommands = ''
+      ${config.systemd.package}/bin/systemctl --user stop graphical-session.target
+
       xrdb "${pkgs.writeText "xrdb.conf" ''
         Xft.dpi: ${toString dpi}
 
