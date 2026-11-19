@@ -44,6 +44,17 @@
     text = "chmod 0600 /etc/shadow";
   };
 
+  # NAC requires the INPUT chain policy to be DROP or REJECT. The iptables
+  # firewall of NixOS leaves the policy at ACCEPT and refuses everything
+  # unwanted at the end of its nixos-fw chain, so the effect is the same; this
+  # only makes the policy itself say so. The nftables backend has `policy drop`
+  # in its own table, but Docker keeps an iptables INPUT chain with ACCEPT next
+  # to it. Stopping the firewall restores ACCEPT, as nixos-fw is gone then.
+  networking.firewall = {
+    extraCommands = "ip46tables -P INPUT DROP";
+    extraStopCommands = "ip46tables -P INPUT ACCEPT";
+  };
+
   solarized.variant = "dark";
 
   # 14" 1920x1200 (about 161 real dpi); with the 2.8K OLED panel (2880x1800,
