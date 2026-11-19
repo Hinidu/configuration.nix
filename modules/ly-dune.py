@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Draws the Dune login animation for ly: an Arrakis dusk with the DUNE logo,
-twinkling stars, a shooting star and sand blowing off the dune crests.
+twinkling stars, the dot of the E flying off as a shooting star and sand
+blowing off the dune crests.
 
 Writes `dune.dur` (durdraw format 7, the only one ly reads) and `palette`, the
 16 colors of the Linux console that the animation is drawn with. The console
@@ -274,9 +275,15 @@ class Scene:
         dunes = downsample(ground[..., None])[..., 0] > 0.5
         # The logo is whole pixels: smoothed edges come out as stray orange
         # between its cream and the night sky
-        logo = downsample(self._logo_cover(px, py)[..., None])[..., 0] > 0.45
+        logo = downsample(self._logo_cover(px, py, dots=False)[..., None])[..., 0] > 0.45
         image[logo] = PALETTE_LINEAR[15]
         self.regions = np.where(logo, LIGHTS, np.where(dunes, DUNES, SKY))
+        # The E's dot is drawn frame by frame: it flies off as the shooting star
+        dot = downsample(self._logo_cover(px, py, strokes=False)[..., None])[..., 0] > 0.45
+        self.dot_pixels = [tuple(pixel) for pixel in np.argwhere(dot)]
+        if not self.dot_pixels:
+            raise ValueError("the E's dot is smaller than a pixel")
+        self.dot_center = np.argwhere(dot).mean(axis=0)[::-1] + 0.5
         return image
 
     def _sky(self, px, py):
@@ -289,13 +296,13 @@ class Scene:
         colors = np.array([linear_color(color) for _, color in stops])
         return np.stack([np.interp(position, offsets, colors[:, channel]) for channel in range(3)], axis=-1)
 
-    def _logo_cover(self, px, py):
+    def _logo_cover(self, px, py, strokes=True, dots=True):
         left = self.center - logo_strokes(0, 0, self.logo_height)[3] / 2
-        letters, dots, stroke, _ = logo_strokes(left, self.logo_top, self.logo_height)
+        letters, dot_circles, stroke, _ = logo_strokes(left, self.logo_top, self.logo_height)
         distance = np.full(px.shape, np.inf)
-        for points in letters:
+        for points in letters if strokes else []:
             distance = np.minimum(distance, polyline_distance(px, py, points) - stroke / 2)
-        for x, y, radius in dots:
+        for x, y, radius in dot_circles if dots else []:
             distance = np.minimum(distance, np.hypot(px - x, py - y) - radius)
         return (distance <= 0).astype(float)
 
@@ -405,20 +412,26 @@ class Scene:
         return glyphs
 
     def meteor_pixels(self, number):
-        """A shooting star once a loop, down the sky left of the login box:
-        pixels of its head and tail, the tail dimming from cream to lavender."""
-        first, life = 8, 8
-        step = number - first
-        if not 0 <= step < life:
+        """The E's dot and its flight: it sits in the E, breaks off as a
+        shooting star out through the E's open side, down to the right, its
+        tail dimming from cream to lavender, and after a while lights up in
+        the E again. Pixels with their slots."""
+        launch, flight, relight = 12, 8, 36
+        shades = [15, 13, 8]
+        if number < launch or number >= relight:
+            # Lights up again through lavender and pale cream
+            shade = {relight: 8, relight + 1: 13}.get(number, 15)
+            return [(y, x, shade) for y, x in self.dot_pixels]
+        step = number - launch
+        if step >= flight:
             return []
-        start = np.array([self.center - 0.42 * self.height, 0.30 * self.height])
-        end = np.array([self.center - 0.80 * self.height, 0.50 * self.height])
+        start = self.dot_center
+        end = start + np.array([0.35 * self.height, 0.2 * self.height])
         direction = (end - start) / np.linalg.norm(end - start)
-        head = start + (end - start) * step / (life - 1)
+        head = start + (end - start) * step / (flight - 1)
         tail = min(14.0, np.linalg.norm(head - start) + 1)
         # The last steps burn out: the whole streak one shade dimmer each
-        dimming = max(0, step - (life - 3))
-        shades = [15, 13, 8]
+        dimming = max(0, step - (flight - 3))
         pixels = {}
         for distance in np.linspace(0, tail, int(tail * 3) + 1):
             x, y = head - direction * distance
@@ -503,17 +516,18 @@ def main():
     scene = Scene(args.columns, args.lines)
     # Only the stars and the sand move, as dots over the still scene
     still = painter.paint(scene.static, scene.regions)
+    # Most frames show the same dot in the E: paint each look once
+    painted = {(): still}
     frames = []
     for number in range(FRAMES):
-        meteor = scene.meteor_pixels(number)
-        if meteor:
+        meteor = tuple(sorted(scene.meteor_pixels(number)))
+        if meteor not in painted:
             image, regions = scene.static.copy(), scene.regions.copy()
             for y, x, slot in meteor:
                 image[y, x] = PALETTE_LINEAR[slot]
                 regions[y, x] = LIGHTS
-            base = painter.paint(image, regions)
-        else:
-            base = still
+            painted[meteor] = painter.paint(image, regions)
+        base = painted[meteor]
         cells = [list(row) for row in base]
         moving = {**scene.star_glyphs(number), **scene.grain_glyphs(number)}
         for (column, line), (glyph, foreground) in moving.items():
