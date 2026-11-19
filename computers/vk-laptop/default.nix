@@ -6,6 +6,7 @@
   imports =
     [ ./hardware-configuration.nix
       ./fleet-orbit.nix
+      ./nac-agent.nix
       ../../modules/display.nix
       ../../modules/encrypted-disk.nix
       ../../modules/env.nix
