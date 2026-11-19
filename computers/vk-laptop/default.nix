@@ -7,6 +7,7 @@
     [ ./hardware-configuration.nix
       ./fleet-orbit.nix
       ./nac-agent.nix
+      ./vkey-x509.nix
       ../../modules/display.nix
       ../../modules/encrypted-disk.nix
       ../../modules/env.nix
