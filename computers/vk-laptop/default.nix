@@ -5,6 +5,7 @@
 {
   imports =
     [ ./hardware-configuration.nix
+      ./fleet-orbit.nix
       ../../modules/display.nix
       ../../modules/encrypted-disk.nix
       ../../modules/env.nix
