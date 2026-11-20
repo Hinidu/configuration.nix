@@ -12,6 +12,10 @@
     automatic = true;
     options = "--delete-older-than 30d";
   };
+  # Otherwise GC deletes build-time dependencies (stdenv, GHC for the xmonad
+  # config, Rust for lanzaboote) every night, and the next rebuild downloads
+  # them again even when only one line of the config changed
+  nix.settings.keep-outputs = true;
   boot.loader.systemd-boot.configurationLimit = 10;
 
   # nixpkgs and home-manager are inputs of flake.nix instead of channels; NixOS
