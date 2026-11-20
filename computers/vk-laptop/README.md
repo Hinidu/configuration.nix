@@ -36,7 +36,8 @@ It asks for the password (a polkit rule in `nac-agent.nix`).
 
 It doesn't come back by itself after a reboot or a dropped connection
 (`modules/openvpn-client.nix`). The installers, Fleet, the NAC servers and the
-VKey issuer below are reachable only through it.
+VKey issuer below are reachable only through it. Once VKey's `barbos` VPN runs
+(step 6), this one is only the fallback: for issuing VKey certificates again.
 
 The docs server doesn't send its intermediate certificate, so `curl` from the
 docs fails with error 60. Install the roots the docs name, or fetch the
@@ -95,6 +96,14 @@ The system side (TPM, `tss` group, sudo for `resolvectl`) is in `vkey-x509.nix`.
     sudo systemctl stop openvpn-barbos   # the same tun device name
     systemctl --user daemon-reload
     systemctl --user start barbos
+    # The NAC agent picks its client certificate only on start: until then it
+    # reports with the embedded one
+    sudo systemctl restart nac-agent
+
+The NAC log then says `"msg":"Will use TPM/VKey certificate"` with the serial of
+the VKey certificate instead of `Will use embedded certificate`. The protected
+NAC storage for the VKey key (the `ru.vk.nac.vkey.enroll` polkit action,
+`/var/lib/nac-agent/vkey`) is optional and isn't used here.
 
 - Flags go before the subcommand: `login -confdir …`, as some docs have it,
   silently ignores `-confdir`.

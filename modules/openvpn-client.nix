@@ -1,7 +1,14 @@
 { config, lib, pkgs, ... }:
 
-# Corporate VPN. The password is a fixed PIN followed by a one-time code, so
-# OpenVPN asks for it on every connect (via systemd-ask-password):
+# The legacy corporate VPN, kept as the fallback way into the corporate network
+# without VKey-x509: VKey's own barbos VPN (computers/vk-laptop/vkey-x509.nix)
+# is the everyday one, but issuing its certificates on a new machine, or again
+# after they're lost, works only from inside. Nothing starts it, and the files
+# below are needed only when it's started. Stop barbos first: both use the
+# same tun device name.
+#
+# The password is a fixed PIN followed by a one-time code, so OpenVPN asks for
+# it on every connect (via systemd-ask-password):
 #
 #   sudo systemctl start openvpn-barbos   # prompts "Enter Auth Password:"
 #   sudo systemctl stop openvpn-barbos
