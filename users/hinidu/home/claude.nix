@@ -172,11 +172,33 @@ in
     };
   };
 
-  # claude-cli:// deep links. Exec goes through PATH, so the entry survives
-  # claude-code upgrades (Claude's own entry pins a /nix/store path)
   # Picked by `theme = "custom:solarized"`; Claude Code reads it at startup
   home.file."${config.programs.claude-code.configDir}/themes/solarized.json".text =
     builtins.toJSON solarizedTheme;
+
+  # Sessions under ~/work go through the VK AI proxy on the corporate token
+  # instead of the personal subscription; the fish `ca` function passes this
+  # file to `claude agents --settings` there. The proxy serves no Opus or
+  # Fable, so every model tier maps to what it has. The token itself stays
+  # out of the repo: apiKeyHelper reads it at runtime from a 600 file.
+  home.file."${config.programs.claude-code.configDir}/vk-proxy-settings.json".text =
+    builtins.toJSON {
+      model = "sonnet";
+      apiKeyHelper = "cat ${config.xdg.configHome}/vk-ai-proxy/token";
+      env = {
+        ANTHROPIC_BASE_URL = "https://ai-proxy.vk.team";
+        ANTHROPIC_CUSTOM_HEADERS = "Plugin-Type: claude-code";
+        VK_LLM_PROXY_USER = "p.platto";
+        ANTHROPIC_DEFAULT_OPUS_MODEL = "claude-sonnet-5-5";
+        ANTHROPIC_DEFAULT_SONNET_MODEL = "claude-sonnet-5-5";
+        ANTHROPIC_DEFAULT_HAIKU_MODEL = "claude-haiku-4-5";
+        # Telemetry and error reports would reach Anthropic past the proxy
+        CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC = "1";
+      };
+    };
+
+  # claude-cli:// deep links. Exec goes through PATH, so the entry survives
+  # claude-code upgrades (Claude's own entry pins a /nix/store path)
 
   xdg.desktopEntries.claude-code-url-handler = {
     name = "Claude Code URL Handler";
