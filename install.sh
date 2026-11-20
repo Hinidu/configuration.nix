@@ -120,6 +120,9 @@ fi
 echo "Installed. Boot into it, then put the firmware into Setup Mode with Secure Boot disabled,"
 echo "boot once more, and only then enable Secure Boot: see the steps in modules/secure-boot.nix."
 echo "Then commit and push computers/$host/hardware-configuration.nix (and default.nix if --disk changed it)."
+if [[ -f $host_dir/README.md ]]; then
+    echo "What else to set up by hand: computers/$host/README.md."
+fi
 if [[ -z $wifi_secrets ]]; then
     echo "No --wifi-secrets: put wifi-secrets.env into /etc/nixos (root:wpa_supplicant, mode 640) or wpa_supplicant won't start."
     echo "  sudo chgrp wpa_supplicant /etc/nixos/wifi-secrets.env && sudo chmod 640 /etc/nixos/wifi-secrets.env"
