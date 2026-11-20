@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, inputs, ... }:
 
 # The work ThinkPad T14 Gen4 (Intel). Installed with `install.sh vk-laptop`,
 # which generates hardware-configuration.nix next to this file.
@@ -8,6 +8,7 @@
       ./fleet-orbit.nix
       ./nac-agent.nix
       ./vkey-x509.nix
+      inputs.nix-flatpak.nixosModules.nix-flatpak
       ../../modules/display.nix
       ../../modules/encrypted-disk.nix
       ../../modules/env.nix
@@ -59,7 +60,57 @@
 
   environment.systemPackages = [
     (pkgs.callPackage ../../packages/vkworkspace.nix { })
+    # VK Calls from Flatpak (below) under the name of the binary inside it, as
+    # the one exported by Flatpak is its app ID
+    (pkgs.writeShellScriptBin "vkcalls" ''
+      exec ${config.services.flatpak.package}/bin/flatpak run com.vk.calls "$@"
+    '')
   ];
+
+  # Flatpak only for VK Calls: its DEB links against the system's Qt 5
+  # WebEngine, which nixpkgs no longer has, while the Flatpak bundle carries
+  # its own (io.qt.qtwebengine.BaseApp) on the org.kde.Platform 5.15-22.08
+  # runtime, which nix-flatpak installs from Flathub, its default remote, on
+  # activation (the flatpak-managed-install service).
+  #
+  # The download page links to latest/vk-calls.flatpak, but each release also
+  # stays at <version>/, next to the DEB of the same version, so this pins
+  # one. The bundle doesn't carry its version, the DEB does: to update, read
+  # it from the head of the latest DEB (the part with its control file), drop
+  # the Debian revision (1.44.39190-1 is 1.44.39190), and put it and the hash
+  # of its bundle into `version` and `sha256`:
+  #
+  #   curl -s -r 0-131071 -o /tmp/vk-calls.deb https://vkcalls-native-ac.vk-apps.com/latest/vk-calls-amd64.deb
+  #   ar p /tmp/vk-calls.deb control.tar.gz | tar -xzO ./control | grep ^Version
+  #   curl -sL https://vkcalls-native-ac.vk-apps.com/<version>/vk-calls.flatpak | sha256sum
+  #
+  # nix-flatpak reinstalls the app when the hash changes.
+  services.flatpak = {
+    enable = true;
+    packages = [
+      (
+        let
+          version = "1.44.39190";
+          sha256 = "b44c614b6300a63e6aebfbc53ca7e8f8e1e151d31c8ae6ad8bc999495ab0abee";
+        in
+        {
+          appId = "com.vk.calls";
+          inherit sha256;
+          bundle = "${pkgs.fetchurl {
+            url = "https://vkcalls-native-ac.vk-apps.com/${version}/vk-calls.flatpak";
+            inherit sha256;
+          }}";
+        }
+      )
+    ];
+  };
+  # Flatpak requires a portal; xmonad has none of its own, the GTK one serves
+  # the file chooser and the rest
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = "gtk";
+  };
 
   solarized.variant = "dark";
 

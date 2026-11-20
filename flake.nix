@@ -16,6 +16,10 @@
       url = "github:nix-community/disko/v1.13.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Declarative Flatpak apps and remotes (VK Calls on vk-laptop); the tag is
+    # spelled out, as the repo also has a v0.8.0 maintenance branch, which a
+    # bare v0.8.0 resolves to
+    nix-flatpak.url = "github:gmodena/nix-flatpak?ref=refs/tags/v0.8.0";
     # Secure Boot with keys of our own (modules/secure-boot.nix)
     lanzaboote = {
       url = "github:nix-community/lanzaboote/v1.2.0";
