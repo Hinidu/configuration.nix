@@ -11,9 +11,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Partitions, encrypts and mounts disks from their description in Nix
-    # (modules/encrypted-disk.nix); `latest` is its latest release
+    # (modules/encrypted-disk.nix)
     disko = {
-      url = "github:nix-community/disko/latest";
+      url = "github:nix-community/disko/v1.13.0";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # Secure Boot with keys of our own (modules/secure-boot.nix)
