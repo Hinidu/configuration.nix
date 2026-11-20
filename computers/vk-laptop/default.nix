@@ -9,6 +9,7 @@
       ./nac-agent.nix
       ./vkey-x509.nix
       inputs.nix-flatpak.nixosModules.nix-flatpak
+      ../../modules/devices.nix
       ../../modules/display.nix
       ../../modules/encrypted-disk.nix
       ../../modules/env.nix
@@ -119,6 +120,11 @@
   display = {
     dpi = 168;
     height = 1800;
+  };
+
+  devices = {
+    wifiInterface = "wlp0s20f3";
+    acAdapter = "AC";
   };
 
   # xmonad workspaces, M-1… in this order (modules/projects.nix)

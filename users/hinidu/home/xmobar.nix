@@ -3,6 +3,7 @@
 let
   colors = osConfig.solarized.colors;
   display = osConfig.display;
+  devices = osConfig.devices;
   bar = display.bars.main;
 
   # Nerd Font glyph by its hex code point (BMP only)
@@ -105,7 +106,7 @@ in
                                      ] 50
                           -- Orange like the Wi-Fi it sticks to
                           , Run DynNetwork ["-t", "<fc=${colors.orange}>${glyph "f063"}</fc> <rx> <fc=${colors.orange}>${glyph "f062"}</fc> <tx>"] 10
-                          , Run Wireless "wlo1" ["-t", "<fc=#CB4B16>${glyph "f1eb"} <essid></fc>"] 60
+                          , Run Wireless "${devices.wifiInterface}" ["-t", "<fc=#CB4B16>${glyph "f1eb"} <essid></fc>"] 60
                           , Run DiskU [("/", "<fc=#DC322F>${glyph "f0a0"}</fc> <usedp>%")] [] 100
                           , Run Alsa "default" "Master" [ "--template", "<status> <volume>%"
                                                         , "--"
@@ -128,7 +129,7 @@ in
                                         , "-A", "10"
                                         -- xmobar defaults to AC/online and silently
                                         -- treats a missing file as being on battery
-                                        , "-f", "AC0/online"
+                                        , "-f", "${devices.acAdapter}/online"
                                         , "-a", "${lowBatteryAction}"
                                         ] 50
                           , Run Date "<fc=#CB4B16>${glyph "f017"} %a %d.%m %H:%M</fc>" "date" 100
@@ -147,7 +148,7 @@ in
              , alignSep = "}{"
              -- Two spaces between widgets; details without an icon of their own
              -- (load, frequency, top processes, traffic) stick to their widget with one
-             , template = " <fc=#6c71c4><fn=2>${glyph "f313"}</fn></fc> %XMonadLog% }{ <fn=1>%uptime%</fn>  %multicpu% %load% %cpufreq% %top%  %coretemp%  %memory% %topmem%  %swap%  %wlo1wi% %dynnetwork%  %disku%  %alsa:default:Master%  %battery%  %date%  %UMKK%  <fc=#859900>${glyph "f11c"} %kbd%</fc> "
+             , template = " <fc=#6c71c4><fn=2>${glyph "f313"}</fn></fc> %XMonadLog% }{ <fn=1>%uptime%</fn>  %multicpu% %load% %cpufreq% %top%  %coretemp%  %memory% %topmem%  %swap%  %${devices.wifiInterface}wi% %dynnetwork%  %disku%  %alsa:default:Master%  %battery%  %date%  %UMKK%  <fc=#859900>${glyph "f11c"} %kbd%</fc> "
              }
     '';
   };

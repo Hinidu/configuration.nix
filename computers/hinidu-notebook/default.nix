@@ -3,6 +3,7 @@
 {
   imports =
     [ ./hardware-configuration.nix
+      ../../modules/devices.nix
       ../../modules/display.nix
       ../../modules/env.nix
       ../../modules/i18n.nix
@@ -34,6 +35,11 @@
     height = 2200;
   };
 
+  devices = {
+    wifiInterface = "wlo1";
+    acAdapter = "AC0";
+  };
+
   # xmonad workspaces, M-1… in this order (modules/projects.nix)
   desktop.projects = [
     { name = "im"; }
@@ -57,7 +63,7 @@
   # Also the name of this host in flake.nix: nixos-rebuild picks it by hostname
   networking.hostName = "hinidu-notebook";
   networking.useDHCP = false;
-  networking.interfaces.wlo1.useDHCP = true;
+  networking.interfaces.${config.devices.wifiInterface}.useDHCP = true;
   networking.wireless = {
     enable = true;
 

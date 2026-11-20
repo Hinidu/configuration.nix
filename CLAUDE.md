@@ -33,9 +33,10 @@ to prepare first.
   attribute name must equal the host's `networking.hostName`.
 - `computers/<host>/default.nix` is the per-host entry point: it picks the set of `modules/` and
   `users/` to import and holds host-only settings (hostname, boot loader, network interfaces,
-  `stateVersion`, Wi-Fi networks, and the screen: `display.dpi`/`display.height` from
-  `modules/display.nix`, which every desktop size is derived from). Next to it is the host's
-  generated `hardware-configuration.nix`. The repo is checked out on several hosts (`hinidu-notebook`,
+  `stateVersion`, Wi-Fi networks, the screen: `display.dpi`/`display.height` from
+  `modules/display.nix`, which every desktop size is derived from, and the device names xmobar
+  needs: `devices.wifiInterface`/`devices.acAdapter` from `modules/devices.nix`). Next to it is
+  the host's generated `hardware-configuration.nix`. The repo is checked out on several hosts (`hinidu-notebook`,
   the work `vk-laptop`): the one being configured is the current `hostname`, so check it before
   changing per-host files or evaluating `nixosConfigurations.<host>`.
 - New hosts describe their disk with `modules/encrypted-disk.nix` (disko: LUKS2 + btrfs), which
