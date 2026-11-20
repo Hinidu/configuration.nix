@@ -133,8 +133,8 @@
     { name = "web"; }
     {
       name = "work";
-      directory = "~/sources";
-      agentDirectories = [ "~/sources" ];
+      directory = "~/work";
+      agentDirectories = [ "~/work" ];
     }
     {
       name = "sys";
