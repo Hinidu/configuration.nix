@@ -82,6 +82,7 @@
     usbutils
     uv
     wget
+    woeusb-ng
     xmessage
     xray
     zip
