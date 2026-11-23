@@ -29,6 +29,7 @@
     elmPackages.elm
     erlang_27
     f2fs-tools
+    f3
     ffmpeg
     file
     fish
@@ -49,6 +50,7 @@
     nil
     nixpkgs-fmt
     nodejs
+    ntfs3g
     openssl
     p7zip
     pamixer
