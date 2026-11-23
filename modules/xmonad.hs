@@ -163,6 +163,8 @@ keys' =
     , ((0, xK_Print), screenshot "")
     , ((controlMask, xK_Print), screenshot "--select")
     , ((modMask', xK_Print), screenshot "--focused --border")
+    -- Starts recording a selected area to ~/screenshots, pressed again stops it
+    , ((shiftMask, xK_Print), spawn "screen-record")
     , ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl set 10%-")
     , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl set +10%")
     , ((0, xF86XK_AudioLowerVolume), spawn "pamixer -d 5")

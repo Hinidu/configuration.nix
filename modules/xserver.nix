@@ -172,6 +172,68 @@ in
       export GDK_DPI_SCALE=${toString (1.0 / gdkScale)}
       exec ${unityhub}/bin/unityhub "$@"
     '')
+
+    # Screen recording for Shift+Print in xmonad: the first run selects an area
+    # (or a window by click) and records it to ~/screenshots/*.mp4, the next
+    # one stops the recording. H.264 without sound, which Telegram, Slack and
+    # GitHub play inline like a GIF. Only the full ffmpeg variant has x11grab
+    # (and the XFixes cursor drawing); overriding the default one instead would
+    # build it from source
+    (writeShellApplication {
+      name = "screen-record";
+      runtimeInputs = [ coreutils ffmpeg-full libnotify slop ];
+      text = ''
+        state_dir="''${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR is not set}"
+        pid_file="$state_dir/screen-record.pid"
+        log_file="$state_dir/screen-record.log"
+
+        if [ -f "$pid_file" ]; then
+          recorder_pid=$(cat "$pid_file")
+          if kill -0 "$recorder_pid" 2>/dev/null; then
+            # ffmpeg finishes the file properly on SIGINT, the recording
+            # process then reports where it is
+            kill -INT "$recorder_pid"
+            exit 0
+          fi
+          rm "$pid_file"
+        fi
+
+        # Lets the key be released first, otherwise slop can't grab the pointer
+        sleep 0.2
+        # Esc cancels the selection: slop exits with an error, nothing to record
+        geometry=$(slop --format '%w %h %x %y') || exit 0
+        read -r width height left top <<<"$geometry"
+        # H.264 with yuv420p needs even frame sizes
+        width=$((width / 2 * 2))
+        height=$((height / 2 * 2))
+        if [ "$width" -lt 2 ] || [ "$height" -lt 2 ]; then
+          notify-send --urgency=critical "Screen recording" "The selected area is too small: ''${geometry}"
+          exit 1
+        fi
+
+        mkdir -p ~/screenshots
+        output=~/screenshots/$(date +%Y-%m-%d-%H%M%S)_''${width}x''${height}.mp4
+        # Short-lived, since it may fall into the recorded area
+        notify-send --expire-time=1000 "Screen recording" "Started, Shift+Print stops it"
+        ffmpeg -nostdin -loglevel error \
+          -f x11grab -framerate 30 -video_size "''${width}x''${height}" -i "$DISPLAY+$left,$top" \
+          -c:v libx264 -preset veryfast -crf 23 -pix_fmt yuv420p -movflags +faststart \
+          "$output" 2>"$log_file" &
+        recorder_pid=$!
+        echo "$recorder_pid" >"$pid_file"
+
+        # ffmpeg exits with 255 when stopped by SIGINT, which is the normal stop
+        exit_code=0
+        wait "$recorder_pid" || exit_code=$?
+        rm -f "$pid_file"
+        if [ "$exit_code" -eq 0 ] || [ "$exit_code" -eq 255 ]; then
+          notify-send "Screen recording" "Saved $output"
+        else
+          notify-send --urgency=critical "Screen recording" "ffmpeg failed with code $exit_code: $(tail -n 5 "$log_file")"
+          exit "$exit_code"
+        fi
+      '';
+    })
   ];
 
   # Is needed for Unity3D
