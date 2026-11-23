@@ -78,6 +78,7 @@
     ripgrep
     roslyn-ls
     ruby
+    scc
     ssm-session-manager-plugin
     terraform
     typescript
