@@ -63,8 +63,10 @@
         pandas
         matplotlib
         duckdb
+        jinja2
         pyarrow
         pymupdf
+        pytest
         xlrd
       ]
     ))
