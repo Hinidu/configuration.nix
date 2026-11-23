@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 # The work ThinkPad T14 Gen4 (Intel). Installed with `install.sh vk-laptop`,
 # which generates hardware-configuration.nix next to this file.
@@ -112,6 +112,25 @@
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config.common.default = "gtk";
   };
+  # The sign-in in the browser hands the result back to VK Calls by
+  # vkcalls:// (and vkca://, vkcau://) links. Flatpak's own entry for them is
+  # in /var/lib/flatpak/exports/share, which only X sessions started after
+  # Flatpak was enabled have in XDG_DATA_DIRS; elsewhere xdg-open finds no
+  # handler and the links do nothing. The user's profile is always there, and
+  # the read-only mimeapps.list needs the defaults declared anyway.
+  home-manager.users.hinidu.xdg =
+    let
+      schemes = map (scheme: "x-scheme-handler/${scheme}") [ "vkcalls" "vkca" "vkcau" ];
+    in
+    {
+      desktopEntries.vkcalls = {
+        name = "VK Calls";
+        exec = "vkcalls %U";
+        noDisplay = true;
+        mimeType = schemes;
+      };
+      mimeApps.defaultApplications = lib.genAttrs schemes (scheme: "vkcalls.desktop");
+    };
 
   solarized.variant = "dark";
 
