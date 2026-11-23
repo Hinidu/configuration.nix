@@ -22,6 +22,9 @@
       push.default = "current";
     };
 
+    # Without it, files a repository keeps in LFS check out as pointer stubs
+    lfs.enable = true;
+
     ignores = [
       "**/.claude/settings.local.json"
     ];
