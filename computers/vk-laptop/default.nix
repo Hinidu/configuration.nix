@@ -68,6 +68,13 @@
     '')
   ];
 
+  # Gradle builds of the team's Java 11 projects need a JDK no newer than 11;
+  # this also sets JAVA_HOME, which Gradle prefers over java in PATH.
+  programs.java = {
+    enable = true;
+    package = pkgs.jdk11;
+  };
+
   # Flatpak only for VK Calls: its DEB links against the system's Qt 5
   # WebEngine, which nixpkgs no longer has, while the Flatpak bundle carries
   # its own (io.qt.qtwebengine.BaseApp) on the org.kde.Platform 5.15-22.08
