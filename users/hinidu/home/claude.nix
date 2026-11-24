@@ -172,6 +172,33 @@ in
     };
   };
 
+  # Prompt keys for ~/.claude.json, Claude Code's mutable per-machine state:
+  # settings.json doesn't take them, and /config inside `claude agents`
+  # sessions doesn't persist them. Only these keys are merged in, the rest of
+  # the file stays as Claude wrote it.
+  home.activation.claudeCodeGlobalConfig =
+    let
+      globalConfigFile = "${config.home.homeDirectory}/.claude.json";
+      globalConfig = builtins.toJSON { editorMode = "vim"; };
+    in
+    lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      configFile=${lib.escapeShellArg globalConfigFile}
+      managedConfig=${lib.escapeShellArg globalConfig}
+      if [ -e "$configFile" ]; then
+        currentConfig=$(cat "$configFile")
+      else
+        currentConfig='{}'
+      fi
+      # Rewrite only when a managed key differs, not on every activation
+      if ! printf '%s' "$currentConfig" \
+        | ${pkgs.jq}/bin/jq -e --argjson managed "$managedConfig" '. * $managed == .' >/dev/null; then
+        mergedConfig=$(printf '%s' "$currentConfig" \
+          | ${pkgs.jq}/bin/jq --argjson managed "$managedConfig" '. * $managed')
+        run ${pkgs.coreutils}/bin/install -m 600 /dev/stdin "$configFile.hm-tmp" <<< "$mergedConfig"
+        run mv "$configFile.hm-tmp" "$configFile"
+      fi
+    '';
+
   # Picked by `theme = "custom:solarized"`; Claude Code reads it at startup
   home.file."${config.programs.claude-code.configDir}/themes/solarized.json".text =
     builtins.toJSON solarizedTheme;
