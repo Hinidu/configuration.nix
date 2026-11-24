@@ -105,6 +105,10 @@ the VKey certificate instead of `Will use embedded certificate`. The protected
 NAC storage for the VKey key (the `ru.vk.nac.vkey.enroll` polkit action,
 `/var/lib/nac-agent/vkey`) is optional and isn't used here.
 
+- The quick-login PIN from NACBot is the PIN of the tpm2-pkcs11 token: the VPN
+  doesn't need it, but services asking for the mTLS certificate do, possibly
+  long after the bootstrap. Save it in Bitwarden right away (it's there for
+  this laptop); every bootstrap on a new machine gets a new one.
 - Flags go before the subcommand: `login -confdir …`, as some docs have it,
   silently ignores `-confdir`.
 - Skip the `/etc/sudoers.d/barbos` line the client prints: NixOS sudo doesn't
