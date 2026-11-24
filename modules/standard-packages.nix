@@ -69,6 +69,7 @@
         pyarrow
         pymupdf
         pytest
+        pyyaml
         xlrd
       ]
     ))
