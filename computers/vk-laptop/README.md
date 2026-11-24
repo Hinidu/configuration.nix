@@ -91,7 +91,7 @@ The system side (TPM, `tss` group, sudo for `resolvectl`) is in `vkey-x509.nix`.
     # the barbos and barbos-tray user units and the PKCS#11 module in ~/.pki/nssdb.
     ./vkey-x509-client-linux -confdir /tmp/vkey -verbose bootstrap
     sudo setcap cap_net_admin+eip ~/.local/share/vkey-x509/openvpn
-    # No tray in xmobar
+    # No tray in xmobar (tray-stub.nix only pretends there is one)
     systemctl --user disable --now barbos-tray
     sudo systemctl stop openvpn-barbos   # the same tun device name
     systemctl --user daemon-reload
