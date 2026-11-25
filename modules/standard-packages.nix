@@ -66,10 +66,13 @@
         matplotlib
         duckdb
         jinja2
+        kubernetes
         pyarrow
         pymupdf
         pytest
         pyyaml
+        requests
+        whatthepatch
         xlrd
       ]
     ))
