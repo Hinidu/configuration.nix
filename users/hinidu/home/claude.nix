@@ -15,6 +15,27 @@ let
     text = builtins.readFile ./claude/mark-terminal-urgent.sh;
   };
 
+  # YTsaurus MCP server (vk-mcp.json below) with its token from the
+  # Bitwarden entry `ytsaurus` (rbw.nix), so no ~/.yt/token on disk. A
+  # locked vault brings up pinentry when Claude Code starts the server.
+  # Pinned: uvx would otherwise run whatever PyPI serves at startup
+  ytsaurusMcpServer = pkgs.writeShellApplication {
+    name = "ytsaurus-mcp-server";
+    runtimeInputs = [ config.programs.rbw.package pkgs.uv ];
+    text = ''
+      if ! token=$(rbw get ytsaurus); then
+        echo "ytsaurus-mcp-server: can't read the Bitwarden entry 'ytsaurus' (rbw get ytsaurus)" >&2
+        exit 1
+      fi
+      if [ -z "$token" ]; then
+        echo "ytsaurus-mcp-server: the Bitwarden entry 'ytsaurus' has an empty password" >&2
+        exit 1
+      fi
+      export MCP_YT_TOKEN="$token"
+      exec uvx --from ytsaurus-mcp==0.1.1 mcp_yt_server "$@"
+    '';
+  };
+
   # Highlight the terminal of a session that waits for input or has finished
   markTerminalUrgentHook = [
     {
@@ -232,14 +253,11 @@ in
     lib.mkIf (osConfig.networking.hostName == "vk-laptop") {
       text = builtins.toJSON {
         mcpServers = {
-          # YTsaurus, read-only tools (Cypress, attributes, schemas, ACLs).
-          # Pinned: uvx would otherwise run whatever PyPI serves at startup.
-          # The token comes from the yt client's defaults (YT_TOKEN or
-          # ~/.yt/token), the cluster is passed in every call
+          # YTsaurus, read-only tools (Cypress, attributes, schemas, ACLs);
+          # the cluster is passed in every call
           yt = {
             type = "stdio";
-            command = lib.getExe' pkgs.uv "uvx";
-            args = [ "--from" "ytsaurus-mcp==0.1.1" "mcp_yt_server" ];
+            command = lib.getExe ytsaurusMcpServer;
           };
         };
       };
