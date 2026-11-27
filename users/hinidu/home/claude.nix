@@ -163,6 +163,94 @@ in
         defaultMode = "auto";
         # Auto mode approves reads and edits here without allow rules
         additionalDirectories = [ "/tmp" ];
+        # Installing a package runs foreign code, and the classifier can't
+        # tell a typosquatted or hijacked package from a real one: these
+        # always prompt, even in auto mode
+        ask = map (command: "Bash(${command} *)") [
+          "npm install"
+          "npm i"
+          "npm add"
+          "npm update"
+          "npm exec"
+          "npx"
+          "uv add"
+          "uv pip install"
+          "uv tool install"
+          "uv tool run"
+          "uvx"
+          "pip install"
+        ];
+        # Credentials and browser profiles (cookies, saved logins). The
+        # sandbox applies these Read rules to Bash commands too
+        deny = map (path: "Read(${path}/**)") [
+          "~/.ssh"
+          "~/.gnupg"
+          "~/.config/vk-ai-proxy"
+          "~/.config/google-chrome"
+          "~/.docker"
+          "~/.kube"
+          "~/.aws"
+        ] ++ [
+          "Read(~/.claude/.credentials.json)"
+          # The Bitwarden vault (rbw.nix): while its agent is unlocked,
+          # `rbw get` hands out any secret without asking
+          "Bash(rbw *)"
+        ];
+      };
+      # Bash commands run in bubblewrap: writes only to the working directory
+      # (except its .git), /tmp and the paths below, network only to
+      # allowedDomains (auto mode refuses other domains without asking), no
+      # Unix sockets, so neither ssh-agent, the nix daemon nor D-Bus is
+      # reachable. This contains code that a command runs on its own (a
+      # package's install script, a dependency in tests): only Claude can
+      # take a command out of the sandbox, by retrying it unsandboxed, and
+      # that goes through the usual permission check
+      sandbox = {
+        enabled = true;
+        # Refuse to run rather than silently going unsandboxed
+        failIfUnavailable = true;
+        # Commands that can't work in the sandbox start outside it right
+        # away instead of after a failed attempt. A convenience, not a
+        # boundary: any command can be retried unsandboxed, and these too go
+        # through the permission check. A chain (`&&`, `;`, `|`) matches only
+        # when every part does, `$(...)` never (checked on 2.1.322)
+        excludedCommands = [
+          # SSH remotes (ssh ignores the sandbox proxy, needs ssh-agent) and
+          # the read-only .git
+          "git fetch *"
+          "git pull *"
+          "git push *"
+          "git add *"
+          "git commit *"
+          # The nix daemon's socket (switch is run by the user with sudo)
+          "nix *"
+          "nixos-rebuild dry-build"
+          # D-Bus
+          "systemctl --user *"
+          # Credentials in ~/.aws, AWS endpoints, registry.terraform.io
+          "aws *"
+          "terraform *"
+        ];
+        # Sandboxed commands still go through the auto mode classifier: the
+        # sandbox doesn't stop destructive commands in the working directory
+        # or uploads to the allowed registries. The default from 2.1.324,
+        # set explicitly as earlier versions default to true
+        autoAllowBashIfSandboxed = false;
+        filesystem.allowWrite = [
+          # Background jobs' scratch directories
+          "~/.claude/jobs"
+          # Package caches of npm and uv
+          "~/.npm"
+          "~/.cache"
+        ];
+        # Package registries, so that installs (and uv's sdist builds) stay
+        # inside the sandbox. Code hosting is left out: any host that
+        # accepts uploads could carry data away
+        network.allowedDomains = [
+          "registry.npmjs.org"
+          "pypi.org"
+          "files.pythonhosted.org"
+        ];
       };
       model = "opus";
       hooks = {

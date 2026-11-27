@@ -9,6 +9,8 @@
     beam.packages.erlang_27.elixir_1_17
     binutils
     blender
+    # The Claude Code Bash sandbox runs on these (users/hinidu/home/claude.nix)
+    bubblewrap
     claude-agent-acp
     (claude-code.overrideAttrs (_: {
       version = "2.1.322";
@@ -83,6 +85,7 @@
     roslyn-ls
     ruby
     scc
+    socat
     ssm-session-manager-plugin
     terraform
     typescript

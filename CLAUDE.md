@@ -17,7 +17,9 @@ config evaluates and see what would be built:
 nixos-rebuild dry-build
 ```
 
-- It must run outside the Bash sandbox (the sandbox hides parts of `/nix/var/nix/profiles`).
+- It must run outside the Bash sandbox, which has no access to the nix daemon's socket; `nix *`
+  and exactly `nixos-rebuild dry-build` are in its `excludedCommands`
+  (`users/hinidu/home/claude.nix`), so run them as commands of their own, not inside a chain.
 - A flake sees only files known to git: `git add -N` every new file, or evaluation says it doesn't
   exist.
 - Treat new evaluation warnings (renamed/obsolete options) as something to report.
