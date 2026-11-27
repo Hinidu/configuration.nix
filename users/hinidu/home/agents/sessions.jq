@@ -3,7 +3,11 @@
 # array of state.json documents the Claude daemon keeps in ~/.claude/jobs/<id>/.
 
 # How long a finished session stays visible
-def recentSeconds: 3600;
+def recentSeconds: 86400;
+
+# At most this many sessions are shown: as many as M-s <number> in xmonad
+# has numbers for
+def maxVisibleSessions: 9;
 
 def epochSeconds: sub("\\.[0-9]+Z$"; "Z") | fromdateiso8601;
 
@@ -49,9 +53,12 @@ def actualState:
   else .
   end;
 
+# The most relevant ones: waiting for you first, then working and scheduled,
+# then finished, each the most recently updated first
 def visibleSessions:
   map(actualState | select(.state != "done" or isRecentlyFinished))
-  | sort_by(priority, -(.updatedAt | epochSeconds));
+  | sort_by(priority, -(.updatedAt | epochSeconds))
+  | .[0:maxVisibleSessions];
 
 # Nerd Font icon and Solarized color of a state (hand, hourglass, clock, check). An unknown state gets a
 # warning sign and is shown with its name instead of being guessed.
