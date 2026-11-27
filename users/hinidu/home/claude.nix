@@ -224,6 +224,27 @@ in
       };
     };
 
+  # MCP servers for sessions under ~/work on the work laptop, passed by the
+  # fish `ca` function as `claude agents --mcp-config`. Not
+  # programs.claude-code.mcpServers: that one is global and needs `package`
+  # set, since it wraps the binary.
+  home.file."${config.programs.claude-code.configDir}/vk-mcp.json" =
+    lib.mkIf (osConfig.networking.hostName == "vk-laptop") {
+      text = builtins.toJSON {
+        mcpServers = {
+          # YTsaurus, read-only tools (Cypress, attributes, schemas, ACLs).
+          # Pinned: uvx would otherwise run whatever PyPI serves at startup.
+          # The token comes from the yt client's defaults (YT_TOKEN or
+          # ~/.yt/token), the cluster is passed in every call
+          yt = {
+            type = "stdio";
+            command = lib.getExe' pkgs.uv "uvx";
+            args = [ "--from" "ytsaurus-mcp==0.1.1" "mcp_yt_server" ];
+          };
+        };
+      };
+    };
+
   # claude-cli:// deep links. Exec goes through PATH, so the entry survives
   # claude-code upgrades (Claude's own entry pins a /nix/store path)
 
