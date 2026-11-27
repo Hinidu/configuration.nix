@@ -10,6 +10,7 @@
     ./mime-apps.nix
     ./mpv.nix
     ./neovim.nix
+    ./rbw.nix
     ./ssh.nix
     ./terraform.nix
     ./vifm.nix
