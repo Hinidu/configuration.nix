@@ -39,6 +39,17 @@
   # fprintd also turns on fprintAuth for every PAM service (login, ly, sudo,
   # the screen locker); a finger is enrolled with `fprintd-enroll`.
   services.fprintd.enable = true;
+  # ly reads the password in its own form before calling PAM and never shows
+  # PAM's "place your finger" message. With pam_fprintd first, a typed password
+  # was checked only after its ~30 s wait for a finger, so in ly pam_unix goes
+  # first: a typed password lets in at once, an empty one fails it and
+  # pam_fprintd waits for the finger. pam_unix's 2 s failure delay is served
+  # only if the whole stack fails, so it doesn't slow down the finger.
+  security.pam.services.ly.rules.auth.fprintd.order =
+    config.security.pam.services.ly.rules.auth.unix.order + 10;
+  # Shown on ly's info line instead of the hostname
+  services.displayManager.ly.settings.initial_info_text =
+    "Enter w/o password, then finger";
 
   # NAC requires /etc/shadow to be 0600 or stricter, but the users activation
   # step (update-users-groups.pl) rewrites it as 0640 root:shadow on every
