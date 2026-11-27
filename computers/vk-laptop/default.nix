@@ -7,6 +7,7 @@
     [ ./hardware-configuration.nix
       ./fleet-orbit.nix
       ./nac-agent.nix
+      ./ssh-fingerprint.nix
       ./tray-stub.nix
       ./vkey-x509.nix
       inputs.nix-flatpak.nixosModules.nix-flatpak

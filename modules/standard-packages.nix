@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 {
   environment.systemPackages = with pkgs; [
@@ -107,6 +107,12 @@
     enable = true;
   };
   programs.ssh.startAgent = true;
+  # A key added to the agent (AddKeysToAgent in users/hinidu/home/ssh.nix)
+  # stays unlocked for any process that reaches its socket; drop it after an
+  # hour, then the next use asks for the passphrase again. A host with a
+  # fingerprint reader confirms each use instead
+  # (computers/vk-laptop/ssh-fingerprint.nix)
+  programs.ssh.agentTimeout = lib.mkDefault "1h";
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
