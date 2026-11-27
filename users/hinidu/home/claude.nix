@@ -18,7 +18,9 @@ let
   # YTsaurus MCP server (vk-mcp.json below) with its token from the
   # Bitwarden entry `ytsaurus` (rbw.nix), so no ~/.yt/token on disk. A
   # locked vault brings up pinentry when Claude Code starts the server.
-  # Pinned: uvx would otherwise run whatever PyPI serves at startup
+  # Pinned: uvx would otherwise run whatever PyPI serves at startup. 0.1.1
+  # requires mcp>=1.7.1 with no upper bound but imports mcp.server.fastmcp,
+  # which mcp 2.x renamed, so it fails at startup without `mcp<2`
   ytsaurusMcpServer = pkgs.writeShellApplication {
     name = "ytsaurus-mcp-server";
     runtimeInputs = [ config.programs.rbw.package pkgs.uv ];
@@ -32,7 +34,7 @@ let
         exit 1
       fi
       export MCP_YT_TOKEN="$token"
-      exec uvx --from ytsaurus-mcp==0.1.1 mcp_yt_server "$@"
+      exec uvx --from ytsaurus-mcp==0.1.1 --with 'mcp<2' mcp_yt_server "$@"
     '';
   };
 
