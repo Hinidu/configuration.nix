@@ -5,8 +5,8 @@
 #
 # AddKeysToAgent confirm marks the key so that ssh-agent runs SSH_ASKPASS
 # (with SSH_ASKPASS_PROMPT=confirm) before each signature; the script below
-# answers with fprintd-verify, and a dunst notification says what is
-# waiting. Any other askpass request (a passphrase) goes to the usual
+# answers with fprintd-verify, and a dunst notification says which command
+# asks for the key (found by its connection to the agent's socket). Any other askpass request (a passphrase) goes to the usual
 # x11-ssh-askpass dialog. A key added before this took effect stays
 # unconfirmed until it is re-added: `ssh-add -D`.
 { lib, pkgs, ... }:
@@ -15,16 +15,54 @@ let
 
   fingerprintAskpass = pkgs.writeShellApplication {
     name = "ssh-askpass-fingerprint";
-    runtimeInputs = with pkgs; [ coreutils fprintd gnugrep libnotify ];
+    runtimeInputs = with pkgs; [ coreutils fprintd gawk gnugrep iproute2 libnotify ];
     text = ''
       if [ "''${SSH_ASKPASS_PROMPT:-}" != confirm ]; then
         exec ${passphraseAskpass} "$@"
       fi
 
+      agentSocket="''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/ssh-agent"
+
+      # The processes connected to the agent's socket right now: ssh-agent
+      # asks while the requesting client waits on its connection. `ss` lists
+      # the agent's end with the inode of the client's end, and the client's
+      # end with its process
+      agentClients() {
+        ss -xpn | awk -v socket="$agentSocket" '
+          $5 == socket { clientInodes[$8] = 1; next }
+          { lines[$6] = $0 }
+          END {
+            for (inode in clientInodes) {
+              if (match(lines[inode], /pid=[0-9]+/)) {
+                print substr(lines[inode], RSTART + 4, RLENGTH - 4)
+              }
+            }
+          }'
+      }
+
+      # A client with the processes that started it, e.g. ssh <- git push <-
+      # bash <- claude; a process can rewrite its command line, so this tells
+      # who asks in the usual case, it doesn't prove it
+      processChain() {
+        local pid=$1 depth=0 command
+        while [ "$pid" -gt 1 ] && [ "$depth" -lt 5 ] && [ -r "/proc/$pid/cmdline" ]; do
+          command=$(tr '\0' ' ' < "/proc/$pid/cmdline" | cut -c 1-100)
+          if [ "$depth" -eq 0 ]; then echo "$command"; else echo "← $command"; fi
+          pid=$(awk '/^PPid:/ { print $2 }' "/proc/$pid/status")
+          depth=$((depth + 1))
+        done
+      }
+
+      requesters=""
+      for clientPid in $(agentClients); do
+        requesters+="$(processChain "$clientPid")"$'\n\n'
+      done
+
       # $1 is ssh-agent's question, naming the key. A missing notification
       # daemon mustn't stop the check itself
       notification=$(notify-send --print-id --urgency=critical --app-name=ssh-agent \
-        "SSH key requested: touch the fingerprint reader" "''${1:-}") || notification=""
+        "SSH key requested: touch the fingerprint reader" \
+        "''${requesters:-Unknown process}''${1:-}") || notification=""
 
       # Allowed only on an explicit match; no match, a timeout or a busy
       # reader (sudo or the screen locker using it) deny the signature
